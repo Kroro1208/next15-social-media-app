@@ -4,7 +4,7 @@ const requiredString = z.string().trim().min(1, "必須項目です")
 
 export const signUpSchema = z.object({
     email: requiredString.email("無効なメールアドレスです"),
-    usename: requiredString.regex(
+    username: requiredString.regex(
         /^[a-zA-Z0-9_-]+$/,
         "文字,数字と_(アンダースコア)及び-(ハイフン)のみ入力可能です"
     ),
