@@ -10,21 +10,46 @@ export const metadata: Metadata = {
 
 export default function Page() {
     return (
-        <main className='flex h-screen items-center justify-center p-5'>
-            <div className='flex h-full max-h-[40rem] w-full max-w-[64rem] rounded-2xl overflow-hidden bg-card shadow-2xl'>
-                <div className='md:w-1/2 w-full space-y-10 overflow-y-auto p-10'>
-                    <div className='space-y-1 text-center'>
-                        <h1 className=' text-3xl font-bold'>SignUp Page</h1>
-                        <p className='text-muted-foreground'>次世代のSNSで価値観の合う友達を見つけよう</p>
+        <main className='min-h-screen flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-900'>
+            <div className='flex w-full max-w-4xl bg-card rounded-2xl shadow-xl overflow-hidden'>
+                {/* 左側: フォームエリア */}
+                <div className='flex-1 p-6 md:p-8 lg:p-12'>
+                    <div className='max-w-md mx-auto space-y-8'>
+                        {/* ヘッダー */}
+                        <div className='space-y-2 text-center'>
+                            <h1 className='text-2xl md:text-3xl font-bold tracking-tight'>
+                                アカウント作成
+                            </h1>
+                            <p className='text-sm md:text-base text-muted-foreground'>
+                                次世代のSNSで価値観の合う友達を見つけよう
+                            </p>
+                        </div>
+
+                        {/* フォーム */}
+                        <SignUpForm />
+
+                        {/* ログインリンク */}
+                        <div className='text-center'>
+                            すでにアカウントをお持ちの方は👉
+                            <Link 
+                                href="/login" 
+                                className='text-sm text-muted-foreground hover:text-primary transition-colors'
+                            >
+                                ログイン
+                            </Link>
+                        </div>
                     </div>
                 </div>
-                <div className='space-y-5'>
-                    <SignUpForm />
-                    <Link href="/login" className='block text-center hover:underline'>
-                        すでにアカウントを持っている方👉: ログインする
-                    </Link>
+
+                {/* 右側: イメージエリア */}
+                <div className='hidden md:flex md:w-1/2 bg-gradient-to-br from-primary/10 to-primary/5'>
+                    <Image 
+                        src={signupImage} 
+                        alt='アカウント作成' 
+                        className='object-cover p-8'
+                        priority
+                    />
                 </div>
-                <Image src={signupImage} alt='signupImage' className='w-1/2 hidden md:block object-cover'/>
             </div>
         </main>
     )
