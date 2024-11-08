@@ -5,7 +5,9 @@ import Link from 'next/link';
 import SignUpForm from './SignUpForm';
 
 export const metadata: Metadata = {
-    title: "Sign Up"
+    title: "Sign Up",
+    description: "アカウント作成ページ",
+    keywords: ["SNS", "サインアップ", "アカウント作成"]
 }
 
 export default function Page() {
