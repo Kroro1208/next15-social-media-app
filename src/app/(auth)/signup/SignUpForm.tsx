@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/
 import { Input } from "../../../../components/ui/input";
 import { useState, useTransition } from "react";
 import { signUp } from "./action";
+import { PasswordInput } from "@/components/PasswordInput";
 
 
 export default function SignUpForm() {
@@ -67,7 +68,7 @@ export default function SignUpForm() {
                         <FormItem>
                             <FormLabel>
                                 <FormControl>
-                                    <Input placeholder="パスワードを入力" type="password" {...field}/>
+                                    <PasswordInput placeholder="パスワードを入力" {...field}/>
                                 </FormControl>
                             </FormLabel>
                         </FormItem>
