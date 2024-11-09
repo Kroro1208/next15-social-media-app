@@ -19,8 +19,8 @@ export default function Page() {
                     <div className='max-w-md mx-auto space-y-8'>
                         {/* ヘッダー */}
                         <div className='space-y-2 text-center'>
-                            <h1 className='text-2xl md:text-3xl font-bold tracking-tight'>
-                                アカウント作成
+                            <h1 className='text-2xl text-muted-foreground font-bold tracking-tight'>
+                                Create Your Account
                             </h1>
                             <p className='text-sm md:text-base text-muted-foreground'>
                                 次世代のSNSで価値観の合う友達を見つけよう
