@@ -2,12 +2,12 @@
 import { signUpSchema, type SignUpValues } from "@/app/lib/validation"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "../../../../components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { Input } from "../../../../components/ui/input";
 import { useState, useTransition } from "react";
 import { signUp } from "./action";
 import { PasswordInput } from "@/components/PasswordInput";
+import LoadingButton from "@/components/LoadingButton";
 
 
 export default function SignUpForm() {
@@ -74,7 +74,9 @@ export default function SignUpForm() {
                         </FormItem>
                     )}
                 />
-                <Button type="submit" className="w-full">アカウント作成</Button>
+                <LoadingButton loading={isPending} type="submit" className="w-full">
+                    アカウント作成
+                </LoadingButton>
             </form>
         </Form>
     )
