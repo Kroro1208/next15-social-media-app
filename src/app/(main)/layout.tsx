@@ -11,7 +11,7 @@ export default async function Layout({children}: {children: React.ReactNode}) {
     <SessionProvider value={session}>
         <div className="flex min-h-screen flex-col">
             <Navbar />
-            {children}
+            <div className="mx-auto max-w-7xl p-5">{children}</div>
         </div>
     </SessionProvider>
     )
