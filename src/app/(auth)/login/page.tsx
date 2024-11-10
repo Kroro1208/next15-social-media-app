@@ -15,14 +15,12 @@ export default function Page() {
                 {/* 左側：フォームエリア */}
                 <div className="flex flex-1 flex-col justify-center space-y-6 md:p-8 lg:p-12">
                     <div className="space-y-2 flex flex-col items-center">
-                        <h1 className="text-2xl text-muted-foreground font-bold tracking-tight">ログイン</h1>
+                        <h1 className="text-2xl text-muted-foreground font-bold tracking-tight">Let&apos;s Login</h1>
                         <p className="text-sm text-muted-foreground">
                             アカウントにログインして始めましょう
                         </p>
-                    </div>
-                    
+                    </div>              
                     <LoginForm />
- 
                     <div className="text-sm text-muted-foreground">
                         まだアカウント未登録の方は 👉
                         <Link 
@@ -33,7 +31,6 @@ export default function Page() {
                         </Link>
                     </div>
                 </div>
- 
                 {/* 右側：イメージエリア */}
                 <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-primary/10 to-primary/5">
                     <Image 
@@ -46,4 +43,4 @@ export default function Page() {
             </div>
         </main>
     )
- }
+}

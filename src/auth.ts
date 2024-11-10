@@ -12,13 +12,13 @@ export const lucia = new Lucia(adapter, {
             secure: process.env.NODE_ENV === "production"
         }
     },
-    getUserAttributes(DatabaseUserAttributes) {
+    getUserAttributes(databaseUserAttributes) {
         return {
-            id: DatabaseUserAttributes.id,
-            username: DatabaseUserAttributes.username,
-            displayName: DatabaseUserAttributes.displayName,
-            avatarUrl: DatabaseUserAttributes.avatarUrl,
-            googleId: DatabaseUserAttributes.googleId
+            id: databaseUserAttributes.id,
+            username: databaseUserAttributes.username,
+            displayName: databaseUserAttributes.displayName,
+            avatarUrl: databaseUserAttributes.avatarUrl,
+            googleId: databaseUserAttributes.googleId
         }
     }
 })
