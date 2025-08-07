@@ -8,6 +8,7 @@ import { routeProtection } from "@/config/RouteProtection";
 import { supabase } from "@/supabase-client";
 import { isPersuasionTime } from "@/utils/formatTime";
 import { Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../hooks/useAuth";
@@ -22,6 +23,7 @@ import BookmarkButton from "./BookmarkButton";
 import CreateNestedPostDialog from "./CreateNestedPostDialog";
 import CreatePersuasionDialog from "./CreatePersuasionDialog";
 import NestedPostSection from "./NestedPostSection";
+import NoImage from "./NoImage";
 import PostContentDisplay from "./PostContentDisplay";
 import VoteDeadline from "./VoteDeadline";
 
@@ -423,11 +425,17 @@ const PostDetail = ({ postId }: Props) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4 lg:items-center">
         {/* 左側：画像 */}
         <div className="h-fit">
-          <img
-            src={data.image_url ?? undefined}
-            alt={data.title}
-            className="rounded-lg object-contain w-full h-auto max-h-96 shadow-lg dark:shadow-gray-700"
-          />
+          {data.image_url ? (
+            <Image
+              width={600}
+              height={400}
+              src={data.image_url}
+              alt={data.title}
+              className="rounded-lg object-contain w-full h-auto max-h-96 shadow-lg dark:shadow-gray-700"
+            />
+          ) : (
+            <NoImage />
+          )}
         </div>
 
         {/* 右側：賛成・反対・詳細 */}
