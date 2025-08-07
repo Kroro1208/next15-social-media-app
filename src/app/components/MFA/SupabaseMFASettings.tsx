@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import { LoadingSpinner } from "../ui/LoadingSpinner";
 
 import {
   Dialog,
@@ -265,12 +266,12 @@ export const SupabaseMFASettings = () => {
           <div className="space-y-4 py-4">
             {isEnrolling && (
               <div className="flex justify-center py-8">
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-2"></div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {t("mfa.modal.preparing")}
-                  </p>
-                </div>
+                <LoadingSpinner
+                  size="lg"
+                  variant="primary"
+                  showText
+                  text={t("mfa.modal.preparing")}
+                />
               </div>
             )}
 

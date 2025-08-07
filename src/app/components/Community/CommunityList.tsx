@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react-refresh/only-export-components */
 import { routeProtection } from "@/config/RouteProtection";
 import { supabase } from "@/supabase-client";
 import { useQuery } from "@tanstack/react-query";

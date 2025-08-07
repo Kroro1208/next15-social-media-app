@@ -27,7 +27,7 @@ const CreateNestedPostDialog = ({
 }: CreateNestedPostDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="min-w-4xl max-h-[90vh] overflow-y-auto bg-white border border-gray-200 shadow-xl">
+      <DialogContent className="!max-w-4xl w-full max-h-[90vh] overflow-y-auto bg-white border border-gray-200 shadow-xl">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
             <MessageSquarePlus className="h-5 w-5" />

@@ -93,7 +93,7 @@ const CreateNestedPost = ({
       con_opinion: "",
       detailed_description: "",
       parent_post_id: parentPost.id,
-      target_vote_choice: 1 as 1 | -1,
+      target_vote_choice: undefined,
       vote_deadline: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24時間後
       image: (typeof window !== "undefined"
         ? new DataTransfer().files
@@ -138,7 +138,7 @@ const CreateNestedPost = ({
     const validationResult = await validateNestedPostCreation(
       user.id,
       parentPost.id,
-      data.target_vote_choice,
+      data.target_vote_choice || 0,
       parentPost.nest_level + 1,
     );
 
@@ -399,23 +399,27 @@ const CreateNestedPost = ({
                     field.onChange(value === "" ? undefined : parseInt(value))
                   }
                 >
-                  <SelectTrigger className="text-sm w-[400px] border-2 border-gray-200 bg-white text-gray-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 rounded-xl">
-                    <SelectValue placeholder="質問の対象を選択してください" />
+                  <SelectTrigger className="text-sm w-full border-2 border-gray-200 bg-white text-gray-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 rounded-xl">
+                    <SelectValue placeholder="質問の対象者を選択してください" />
                   </SelectTrigger>
                   <SelectContent className="rounded-xl border-2 border-gray-200 bg-white">
                     <SelectItem
                       value="1"
                       className="py-3 text-gray-900 focus:bg-green-100 focus:text-black"
                     >
-                      <FaArrowAltCircleUp className="text-green-500" />
-                      <p>賛成者向け</p>
+                      <div className="flex items-center gap-2">
+                        <FaArrowAltCircleUp className="text-green-500" />
+                        <p>賛成者に対して質問する</p>
+                      </div>
                     </SelectItem>
                     <SelectItem
                       value="-1"
                       className="py-3 text-gray-900 focus:bg-red-100 focus:text-black"
                     >
-                      <FaArrowAltCircleDown className="text-red-500" />
-                      <p>反対者向け</p>
+                      <div className="flex items-center gap-2">
+                        <FaArrowAltCircleDown className="text-red-500" />
+                        <p>反対者に対して質問する</p>
+                      </div>
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -459,7 +463,7 @@ const CreateNestedPost = ({
                     dateFormat="yyyy/MM/dd HH:mm"
                     timeIntervals={15}
                     placeholderText="投票期限を選択してください"
-                    className="h-10 w-[400px] flex items-center border-2 border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 rounded-xl text-left pl-3"
+                    className="h-10 w-full flex items-center border-2 border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 rounded-xl text-left pl-3"
                   />
                 )}
               />

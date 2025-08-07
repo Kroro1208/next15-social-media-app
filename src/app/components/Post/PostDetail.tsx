@@ -502,7 +502,6 @@ const PostDetail = ({ postId }: Props) => {
         setPersuasionContent={setPersuasionContent}
         handlePersuasionSubmit={handlePersuasionSubmit}
         handleCloseModal={handleCloseModal}
-        showPersuasionModal={showPersuasionModal}
         persuasionCommentMutation={persuasionCommentMutation}
       />
     </div>

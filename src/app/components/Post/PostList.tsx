@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import NestedPostItem from "./NestedPostItem";
 import PostItem from "./PostItem";
 import { supabase } from "@/supabase-client";
+import { CardLoadingSpinner } from "../ui/LoadingSpinner";
 
 export interface PostType {
   id: number;
@@ -232,12 +233,7 @@ const PostList = ({ filter, showNested = false }: PostListProps) => {
   if (isPending) {
     return (
       <div className="flex justify-center items-center py-20">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-slate-200 border-t-slate-500 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-slate-600 font-medium text-lg">
-            投稿を読み込み中...
-          </p>
-        </div>
+        <CardLoadingSpinner text="投稿を読み込み中..." />
       </div>
     );
   }

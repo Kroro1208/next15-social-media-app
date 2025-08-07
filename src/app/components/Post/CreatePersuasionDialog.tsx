@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { InlineLoadingSpinner } from "../ui/LoadingSpinner";
 import { UseMutationResult } from "@tanstack/react-query";
 import { CommentType } from "./PostDetail";
 import {
@@ -14,9 +15,8 @@ import {
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 
-type PersuationDialogProps = {
+type PersuasionDialogProps = {
   open: boolean;
-  showPersuasionModal: boolean;
   onOpenChange: (open: boolean) => void;
   persuasionContent: string;
   setPersuasionContent: (content: string) => void;
@@ -40,10 +40,10 @@ const CreatePersuasionDialog = ({
   persuasionCommentMutation,
   handleCloseModal,
   handlePersuasionSubmit,
-}: PersuationDialogProps) => {
+}: PersuasionDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+      <DialogContent className="sm:max-w-2xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">
             説得コメント
@@ -60,7 +60,7 @@ const CreatePersuasionDialog = ({
               setPersuasionContent((e.target as HTMLTextAreaElement).value)
             }
             placeholder="投票者に向けたメッセージを入力してください..."
-            className="min-h-[120px] max-w-[400px] resize-none text-gray-900 dark:text-white bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="min-h-[120px] w-full resize-none text-gray-900 dark:text-white bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             maxLength={500}
           />
           <div className="text-right text-xs text-gray-500 dark:text-gray-400">
@@ -86,8 +86,8 @@ const CreatePersuasionDialog = ({
           >
             {persuasionCommentMutation.isPending ? (
               <>
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                投稿中...
+                <InlineLoadingSpinner variant="white" />
+                <span className="ml-2">投稿中...</span>
               </>
             ) : (
               <>

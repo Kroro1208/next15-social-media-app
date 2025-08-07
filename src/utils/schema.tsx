@@ -139,11 +139,13 @@ export const createNestedPostSchema = z.object({
       },
     ),
   parent_post_id: z.number().int(),
-  target_vote_choice: z.union([z.literal(1), z.literal(-1)], {
-    errorMap: () => ({
-      message: "賛成（1）または反対（-1）を選択してください",
-    }),
-  }),
+  target_vote_choice: z
+    .union([z.literal(1), z.literal(-1)], {
+      errorMap: () => ({
+        message: "賛成（1）または反対（-1）を選択してください",
+      }),
+    })
+    .optional(),
   image: z
     .any()
     .refine((files) => {
