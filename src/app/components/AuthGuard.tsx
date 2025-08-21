@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "../hooks/useAuth";
-import { PageLoadingSpinner } from "./ui/LoadingSpinner";
+import { OverlayLoadingSpinner } from "./ui/LoadingSpinner";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -15,15 +15,7 @@ export const AuthGuard = ({ children }: AuthGuardProps) => {
     return (
       <>
         {children}
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          {/* Blur背景 */}
-          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300" />
-
-          {/* ローディングスピナー */}
-          <div className="relative z-10">
-            <PageLoadingSpinner text="認証確認中..." />
-          </div>
-        </div>
+        <OverlayLoadingSpinner text="認証確認中..." zIndex="z-50" />
       </>
     );
   }

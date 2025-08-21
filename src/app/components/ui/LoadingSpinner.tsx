@@ -80,3 +80,25 @@ export function CardLoadingSpinner({ text }: { text?: string }) {
     </div>
   );
 }
+
+export function OverlayLoadingSpinner({
+  text = "読み込み中...",
+  zIndex = "z-40",
+}: {
+  text?: string;
+  zIndex?: "z-40" | "z-50";
+}) {
+  return (
+    <div className={`fixed inset-0 ${zIndex} flex items-center justify-center`}>
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300" />
+      <div className="relative z-10">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-white text-sm font-medium drop-shadow-lg">
+            {text}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
