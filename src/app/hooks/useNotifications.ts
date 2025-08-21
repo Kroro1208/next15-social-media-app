@@ -18,18 +18,20 @@ export const useNotifications = () => {
       clearTimeout(invalidationTimerRef.current);
     }
 
-    // 200ms後に実行（複数の変更が短時間に発生した場合は最後の1回のみ実行）
-    // Issue #78対応: デバウンス時間を短縮してリアルタイム性を向上
+    // 500ms後に実行（複数の変更が短時間に発生した場合は最後の1回のみ実行）
+    // Issue #64対応: デバウンス時間を延長してパフォーマンス向上
     invalidationTimerRef.current = setTimeout(() => {
       if (user?.id) {
+        // 単一のクエリキーで両方の情報を管理してリフェッチ頻度を削減
         queryClient.invalidateQueries({
           queryKey: ["notifications", user.id],
         });
+        // 未読数は楽観的更新で対応し、必要時のみリフェッチ
         queryClient.invalidateQueries({
           queryKey: ["unread-notifications-count", user.id],
         });
       }
-    }, 200);
+    }, 500);
   }, [user?.id, queryClient]);
 
   // リアルタイム通知更新

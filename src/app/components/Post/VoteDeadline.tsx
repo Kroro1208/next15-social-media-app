@@ -88,7 +88,7 @@ const VoteDeadline = ({
       // null チェック
       if (!current) return;
 
-      // 動的インターバル設定
+      // 動的インターバル設定（CPU負荷軽減）
       let updateInterval: number;
 
       if (current.days > 0) {
@@ -104,8 +104,8 @@ const VoteDeadline = ({
         // 1分以上：30秒間隔
         updateInterval = 30 * 1000;
       } else {
-        // 1分未満：1秒間隔（最も重要な時間帯のみ）
-        updateInterval = 1000;
+        // 1分未満：10秒間隔（CPU負荷軽減のため1秒→10秒に変更）
+        updateInterval = 10 * 1000;
       }
 
       intervalId = setTimeout(() => {

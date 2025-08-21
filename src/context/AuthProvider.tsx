@@ -9,11 +9,11 @@ export interface AuthContextType {
   signInWithGoogle: () => void;
   signInWithEmail: (
     email: string,
-    password: string,
+    password: string
   ) => Promise<{ error?: string }>;
   signUpWithEmail: (
     email: string,
-    password: string,
+    password: string
   ) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
@@ -25,36 +25,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeAuth = () => {
       try {
-        setLoading(false);
-
         // httpOnly Cookie対応: Supabaseセッションから直接確認
-        supabase.auth.getSession().then(({ data: { session }, error }) => {
-          if (error && !error.message.includes("Refresh Token Not Found")) {
-            console.error("Error getting session:", error);
-            setUser(null);
-            return;
-          }
-          setUser(session?.user ?? null);
+        supabase.auth
+          .getSession()
+          .then(({ data: { session }, error }) => {
+            if (error && !error.message.includes("Refresh Token Not Found")) {
+              console.error("Error getting session:", error);
+              setUser(null);
+              setLoading(false);
+              return;
+            }
+            setUser(session?.user ?? null);
+            setLoading(false); // 認証チェック完了後にloading終了
 
-          // httpOnly Cookie更新（バックグラウンド）
-          if (session?.access_token && session?.refresh_token) {
-            fetch("/api/auth/set-cookies", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                access_token: session.access_token,
-                refresh_token: session.refresh_token,
-              }),
-            }).catch((error) => {
-              console.error(
-                "Error setting cookies during initialization:",
-                error,
-              );
-            });
-          }
-        });
-      } catch (error) {
-        console.error("Auth initialization error:", error);
+            // httpOnly Cookie更新（バックグラウンド）
+            if (session?.access_token && session?.refresh_token) {
+              fetch("/api/auth/set-cookies", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  access_token: session.access_token,
+                  refresh_token: session.refresh_token,
+                }),
+              }).catch((error) => {
+                console.error(
+                  "Error setting cookies during initialization:",
+                  error
+                );
+              });
+            }
+          })
+          .catch(() => {
+            setUser(null);
+            setLoading(false);
+          });
+      } catch {
         setUser(null);
         setLoading(false);
       }
@@ -159,7 +164,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: "サインインエラーが発生しました" };
       }
     },
-    [],
+    []
   );
 
   const signUpWithEmail = useCallback(
@@ -182,7 +187,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: "サインアップエラーが発生しました" };
       }
     },
-    [],
+    []
   );
 
   const signOut = useCallback(async () => {
@@ -205,14 +210,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signUpWithEmail,
       signOut,
     }),
-    [
-      user,
-      loading,
-      signInWithGoogle,
-      signInWithEmail,
-      signUpWithEmail,
-      signOut,
-    ],
+    [user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut]
   );
 
   return (
