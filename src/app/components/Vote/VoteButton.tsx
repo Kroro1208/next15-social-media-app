@@ -149,8 +149,8 @@ const VoteButton = ({
     <div className="flex flex-col gap-3">
       {/* ログインしていない場合のログインボタン表示 */}
       {!user && !votingExpired && (
-        <div className="w-full text-center py-6 px-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-blue-700 mb-3 font-medium">
+        <div className="w-full text-center py-6 px-4 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg">
+          <p className="text-blue-700 dark:text-blue-300 mb-3 font-medium">
             {t("vote.button.login.required")}
           </p>
           <Button

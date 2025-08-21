@@ -153,7 +153,7 @@ export default function SettingsPage() {
                     <img
                       src={profileData.avatarUrl}
                       alt="Avatar"
-                      className="w-16 h-16 rounded-full object-cover border-2 border-slate-200"
+                      className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                     />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold">
@@ -193,7 +193,7 @@ export default function SettingsPage() {
                       <img
                         src={profileData.avatarUrl}
                         alt="Avatar"
-                        className="w-16 h-16 rounded-full object-cover border-2 border-slate-200"
+                        className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                       />
                     ) : (
                       <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold">

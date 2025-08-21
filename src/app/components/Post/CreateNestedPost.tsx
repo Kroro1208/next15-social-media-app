@@ -232,16 +232,20 @@ const CreateNestedPost = ({
   };
 
   const ContentWrapper = useMemo(() => {
-    return ({ children }: { children: React.ReactNode }) => {
+    const ContentWrapperComponent = ({
+      children,
+    }: {
+      children: React.ReactNode;
+    }) => {
       if (isDialog) {
         return <div className="space-y-6">{children}</div>;
       }
       return (
-        <Card className="w-full mx-auto backdrop-blur-sm bg-white/80 border border-gray-200 shadow-xl rounded-2xl">
+        <Card className="w-full mx-auto backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border border-gray-200 dark:border-gray-700 shadow-xl rounded-2xl">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-900">
-                <div className="p-2 bg-violet-100 rounded-lg">
+              <CardTitle className="flex items-center gap-3 text-2xl font-bold text-gray-900 dark:text-gray-100">
+                <div className="p-2 bg-violet-100 dark:bg-violet-900/30 rounded-lg">
                   <MessageSquarePlus className="h-6 w-6 text-violet-600" />
                 </div>
                 派生質問を作成
@@ -255,15 +259,22 @@ const CreateNestedPost = ({
         </Card>
       );
     };
+
+    ContentWrapperComponent.displayName = "ContentWrapper";
+    return ContentWrapperComponent;
   }, [isDialog, onCancel]);
 
   return (
     <ContentWrapper>
       {/* 親投稿情報 */}
-      <div className="mb-6 p-4 bg-slate-50 rounded-xl border-l-4 border-violet-500">
-        <p className="text-sm font-medium text-slate-600 mb-1">返信先:</p>
-        <p className="font-semibold text-slate-800">{parentPost.title}</p>
-        <p className="text-xs text-slate-500 mt-1">
+      <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-xl border-l-4 border-violet-500">
+        <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+          返信先:
+        </p>
+        <p className="font-semibold text-slate-800 dark:text-slate-200">
+          {parentPost.title}
+        </p>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
           ネストレベル: {parentPost.nest_level} → {parentPost.nest_level + 1}
           {parentPost.nest_level >= 2 && " (最大レベルに到達)"}
         </p>
@@ -274,9 +285,9 @@ const CreateNestedPost = ({
         <div className="group">
           <Label
             htmlFor="title"
-            className="flex items-center gap-3 text-lg font-semibold text-gray-700 mb-3"
+            className="flex items-center gap-3 text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"
           >
-            <div className="p-2 bg-blue-100 rounded-lg group-hover:bg-blue-200 transition-colors">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg group-hover:bg-blue-200 dark:group-hover:bg-blue-800/40 transition-colors">
               <FileText className="h-5 w-5 text-blue-600" />
             </div>
             タイトル
@@ -286,7 +297,7 @@ const CreateNestedPost = ({
             type="text"
             {...register("title")}
             placeholder="派生質問のタイトルを入力してください..."
-            className="h-14 text-lg border-2 border-gray-200 bg-white text-gray-900 placeholder:text-gray-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 rounded-xl"
+            className="h-14 text-lg border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 rounded-xl"
           />
           {errors.title && (
             <p className="mt-2 text-sm text-red-600">{errors.title.message}</p>
@@ -297,14 +308,14 @@ const CreateNestedPost = ({
         <div className="group">
           <Label
             htmlFor="content"
-            className="flex items-center gap-3 text-lg font-semibold text-gray-700 mb-3"
+            className="flex items-center gap-3 text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"
           >
             <div className="p-2 bg-green-100 rounded-lg group-hover:bg-green-200 transition-colors">
               <MessageSquare className="h-5 w-5 text-green-600" />
             </div>
             内容
           </Label>
-          <div className="relative border-2 border-gray-200 bg-white rounded-xl focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200 transition-all duration-300">
+          <div className="relative border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-xl focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-200 transition-all duration-300">
             <div className="p-4 space-y-4">
               <div>
                 <div className="flex items-center gap-2 mb-2">
@@ -315,7 +326,7 @@ const CreateNestedPost = ({
                 </div>
                 <Input
                   placeholder="賛成意見の内容を書いてください"
-                  className="text-sm border-green-200 focus:border-green-400"
+                  className="text-sm border-green-200 dark:border-green-700 focus:border-green-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   {...register("pro_opinion")}
                 />
               </div>
@@ -328,28 +339,28 @@ const CreateNestedPost = ({
                 </div>
                 <Input
                   placeholder="反対意見の内容を書いてください..."
-                  className="text-sm border-red-200 focus:border-red-400"
+                  className="text-sm border-red-200 dark:border-red-700 focus:border-red-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   {...register("con_opinion")}
                 />
               </div>
               <div>
-                <Label className="text-sm font-semibold text-gray-700 mb-2 block">
+                <Label className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2 block">
                   詳細説明（任意）
                 </Label>
                 <Textarea
                   rows={4}
                   placeholder="追加の補足説明があれば記入してください..."
-                  className="text-sm resize-none border-gray-200"
+                  className="text-sm resize-none border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                   {...register("detailed_description")}
                 />
               </div>
             </div>
           </div>
           <div className="flex justify-between items-center mt-3">
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-gray-400">
               両方の視点を示すことで、より建設的な議論が期待できます
             </span>
-            <span className="text-sm text-gray-600 font-medium bg-gray-100 px-3 py-1 rounded-full">
+            <span className="text-sm text-gray-600 dark:text-gray-300 font-medium bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
               {(watchedProOpinion?.length || 0) +
                 (watchedConOpinion?.length || 0) +
                 (watchedDetailedDescription?.length || 0)}{" "}
@@ -399,13 +410,13 @@ const CreateNestedPost = ({
                     field.onChange(value === "" ? undefined : parseInt(value))
                   }
                 >
-                  <SelectTrigger className="text-sm w-full border-2 border-gray-200 bg-white text-gray-900 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 rounded-xl">
+                  <SelectTrigger className="text-sm w-full border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 rounded-xl">
                     <SelectValue placeholder="質問の対象者を選択してください" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-2 border-gray-200 bg-white">
+                  <SelectContent className="rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
                     <SelectItem
                       value="1"
-                      className="py-3 text-gray-900 focus:bg-green-100 focus:text-black"
+                      className="py-3 text-gray-900 dark:text-gray-100 focus:bg-green-100 dark:focus:bg-green-900/30 focus:text-black dark:focus:text-white"
                     >
                       <div className="flex items-center gap-2">
                         <FaArrowAltCircleUp className="text-green-500" />
@@ -414,7 +425,7 @@ const CreateNestedPost = ({
                     </SelectItem>
                     <SelectItem
                       value="-1"
-                      className="py-3 text-gray-900 focus:bg-red-100 focus:text-black"
+                      className="py-3 text-gray-900 dark:text-gray-100 focus:bg-red-100 dark:focus:bg-red-900/30 focus:text-black dark:focus:text-white"
                     >
                       <div className="flex items-center gap-2">
                         <FaArrowAltCircleDown className="text-red-500" />
@@ -430,7 +441,7 @@ const CreateNestedPost = ({
                 {errors.target_vote_choice.message}
               </p>
             )}
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
               {watchedTargetChoice === 1 &&
                 "親投稿で「賛成」に投票した人のみが回答できる質問です"}
               {watchedTargetChoice === -1 &&
@@ -444,7 +455,7 @@ const CreateNestedPost = ({
           <div className="group">
             <Label
               htmlFor="vote_deadline"
-              className="flex items-center gap-3 text-lg font-semibold text-gray-700 mb-3"
+              className="flex items-center gap-3 text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3"
             >
               <div className="p-2 bg-indigo-100 rounded-lg group-hover:bg-indigo-200 transition-colors">
                 <Clock className="h-5 w-5 text-indigo-600" />
@@ -463,7 +474,7 @@ const CreateNestedPost = ({
                     dateFormat="yyyy/MM/dd HH:mm"
                     timeIntervals={15}
                     placeholderText="投票期限を選択してください"
-                    className="h-10 w-full flex items-center border-2 border-gray-200 bg-white text-gray-900 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 rounded-xl text-left pl-3"
+                    className="h-10 w-full flex items-center border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 rounded-xl text-left pl-3"
                   />
                 )}
               />
@@ -494,7 +505,7 @@ const CreateNestedPost = ({
               type="file"
               accept="image/*"
               {...register("image")}
-              className="border-2 border-gray-200 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all duration-300 rounded-xl"
+              className="border-2 border-gray-200 dark:border-gray-600 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all duration-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
           {errors.image && (
@@ -504,7 +515,7 @@ const CreateNestedPost = ({
           )}
 
           {imagePreview && (
-            <Card className="mt-6 overflow-hidden border-2 border-gray-200 bg-white rounded-2xl shadow-lg">
+            <Card className="mt-6 overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
               <CardContent className="p-6">
                 <div className="relative group/image">
                   <img
@@ -522,16 +533,16 @@ const CreateNestedPost = ({
                     <X className="h-5 w-5" />
                   </Button>
                 </div>
-                <div className="flex items-center justify-between mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl">
+                <div className="flex items-center justify-between mt-4 p-4 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700 dark:to-gray-600 rounded-xl">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 bg-white rounded-lg shadow-sm">
-                      <ImageIcon className="h-5 w-5 text-gray-600" />
+                    <div className="p-2 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
+                      <ImageIcon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
                     </div>
-                    <span className="font-semibold text-gray-700">
+                    <span className="font-semibold text-gray-700 dark:text-gray-300">
                       {watchImage?.[0]?.name}
                     </span>
                   </div>
-                  <span className="bg-white px-4 py-2 rounded-full text-sm font-medium text-gray-600 shadow-sm">
+                  <span className="bg-white dark:bg-gray-700 px-4 py-2 rounded-full text-sm font-medium text-gray-600 dark:text-gray-300 shadow-sm">
                     {watchImage?.[0]
                       ? Math.round(watchImage[0].size / 1024)
                       : ""}
@@ -569,7 +580,7 @@ const CreateNestedPost = ({
                 variant="outline"
                 onClick={onCancel}
                 disabled={isSubmitting}
-                className="h-14 px-8 text-lg border-2 border-gray-300 hover:border-gray-400 transition-all duration-300 rounded-xl"
+                className="h-14 px-8 text-lg border-2 border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300 rounded-xl text-gray-900 dark:text-gray-100"
               >
                 キャンセル
               </Button>

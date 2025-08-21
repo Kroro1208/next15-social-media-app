@@ -189,10 +189,10 @@ const ProfilePage = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
             {t("profile.page.not.found.title")}
           </h2>
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             {t("profile.page.not.found.description")}
           </p>
         </div>
@@ -227,10 +227,10 @@ const ProfilePage = () => {
     : userProfile?.user_metadata?.["avatar_url"];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-4xl mx-auto py-8 px-4">
         {/* プロフィールヘッダー */}
-        <div className="bg-yellow-100 rounded-2xl shadow-sm border border-gray-200 p-8 mb-8">
+        <div className="bg-yellow-100 dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 mb-8">
           <div className="flex items-start gap-6">
             {/* アバター */}
             <div className="flex-shrink-0">
@@ -238,7 +238,7 @@ const ProfilePage = () => {
                 <img
                   src={avatarUrl}
                   alt={displayName}
-                  className="w-24 h-24 rounded-full object-cover border-4 border-gray-100"
+                  className="w-24 h-24 rounded-full object-cover border-4 border-gray-100 dark:border-gray-700"
                 />
               ) : (
                 <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
@@ -249,24 +249,26 @@ const ProfilePage = () => {
 
             {/* ユーザー情報 */}
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                 {displayName}
                 {isOwnProfile && (
-                  <span className="ml-2 text-lg font-normal text-gray-500">
+                  <span className="ml-2 text-lg font-normal text-gray-500 dark:text-gray-400">
                     {t("profile.page.you")}
                   </span>
                 )}
               </h1>
 
               {isOwnProfile && user?.email && (
-                <p className="text-gray-600 mb-2">{user.email}</p>
+                <p className="text-gray-600 dark:text-gray-300 mb-2">
+                  {user.email}
+                </p>
               )}
 
               {/* 自己紹介文 */}
               {(isOwnProfile
                 ? user?.user_metadata?.["bio"]
                 : userProfile?.user_metadata?.["bio"]) && (
-                <p className="text-gray-700 mb-3 text-sm leading-relaxed whitespace-pre-wrap">
+                <p className="text-gray-700 dark:text-gray-300 mb-3 text-sm leading-relaxed whitespace-pre-wrap">
                   {isOwnProfile
                     ? user?.user_metadata?.["bio"]
                     : userProfile?.user_metadata?.["bio"] ||
@@ -287,58 +289,58 @@ const ProfilePage = () => {
 
               {/* 統計情報 */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div className="text-center p-3 bg-gray-100 rounded-lg">
+                <div className="text-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center justify-center mb-1">
                     <TrendingUp size={16} className="text-blue-500" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     {userStats?.postCount || 0}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("profile.page.posts.count")}
                   </div>
                 </div>
 
-                <div className="text-center p-3 bg-gray-100 rounded-lg">
+                <div className="text-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center justify-center mb-1">
                     <Users size={16} className="text-green-500" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     {userStats?.totalVotes || 0}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("profile.page.votes.count")}
                   </div>
                 </div>
 
-                <div className="text-center p-3 bg-gray-100 rounded-lg">
+                <div className="text-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center justify-center mb-1">
                     <MessageCircle size={16} className="text-purple-500" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     {userStats?.totalComments || 0}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("profile.page.comments.count")}
                   </div>
                 </div>
 
                 {/* 共感ランキング */}
                 {empathyData?.empathy_rank && (
-                  <div className="text-center p-3 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg border border-yellow-100">
+                  <div className="text-center p-3 bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-lg border border-yellow-100 dark:border-yellow-800">
                     <div className="flex items-center justify-center mb-1">
                       <Award size={16} className="text-yellow-500" />
                     </div>
-                    <div className="text-2xl font-bold text-gray-900">
+                    <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
                       #{empathyData.empathy_rank}
                     </div>
-                    <div className="text-sm text-gray-500">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
                       {t("profile.page.empathy.rank")}
                     </div>
                   </div>
                 )}
 
-                <div className="text-center p-3 bg-gray-100 rounded-lg">
+                <div className="text-center p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
                   <div className="flex items-center justify-center mb-1">
                     <Calendar size={16} className="text-gray-500" />
                   </div>
@@ -353,7 +355,7 @@ const ProfilePage = () => {
                         )
                       : "---"}
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("profile.page.joined")}
                   </div>
                 </div>
@@ -372,7 +374,7 @@ const ProfilePage = () => {
               <RefreshCw size={16} />
               {t("profile.page.calculate.scores")}
             </Button>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
               {t("profile.page.calculate.scores.description")}
             </p>
           </div>
@@ -393,8 +395,8 @@ const ProfilePage = () => {
         </div>
 
         {/* 投稿一覧 */}
-        <div className="bg-yellow-100 rounded-2xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <div className="bg-yellow-100 dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
             {isOwnProfile
               ? t("profile.page.your.posts")
               : `${displayName}${t("profile.page.user.posts")}`}
@@ -414,7 +416,7 @@ const ProfilePage = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-2">
                 {t("profile.page.no.posts.title")}
               </h3>
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
                 {isOwnProfile
                   ? t("profile.page.no.posts.own")
                   : t("profile.page.no.posts.other")}

@@ -30,8 +30,8 @@ export const TagStatsCard: React.FC<TagStatsCardProps> = ({
       <Card className={`${compact ? "w-64" : "w-full"}`}>
         <CardContent className="p-4">
           <div className="animate-pulse">
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-2"></div>
+            <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
           </div>
         </CardContent>
       </Card>
@@ -113,8 +113,8 @@ export const TagStatsCard: React.FC<TagStatsCardProps> = ({
           </div>
 
           {showCommunity && tagStats.community && (
-            <div className="mt-3 pt-2 border-t border-gray-200">
-              <span className="text-xs text-gray-600">
+            <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+              <span className="text-xs text-gray-600 dark:text-gray-400">
                 {tagStats.community.name}
               </span>
             </div>

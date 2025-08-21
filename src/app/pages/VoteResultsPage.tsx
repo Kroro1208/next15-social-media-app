@@ -64,12 +64,15 @@ const VoteResultsPage = () => {
     return <ErrorMessage error={postsError ?? votesError} />;
   if (!completedPosts || completedPosts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <CalendarX size={64} className="text-gray-400 mb-4" />
-        <h2 className="text-xl font-semibold text-gray-600 mb-2">
+      <div className="flex flex-col items-center justify-center py-16 text-gray-900 dark:text-gray-100">
+        <CalendarX
+          size={64}
+          className="text-gray-400 dark:text-gray-500 mb-4"
+        />
+        <h2 className="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">
           終了した投票がありません
         </h2>
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400">
           投票期限が終了した投票がある場合、ここに結果が表示されます。
         </p>
       </div>
@@ -77,7 +80,7 @@ const VoteResultsPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800 py-8">
       <div className="max-w-7xl mx-auto px-4">
         {/* ヘッダー */}
         <div className="text-center mb-8">
@@ -92,10 +95,10 @@ const VoteResultsPage = () => {
               <BarChart3 size={32} className="text-white" />
             </div>
           </div>
-          <p className="text-gray-600 text-lg">
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
             期限が終了した投票の結果を人気順でランキング表示
           </p>
-          <div className="flex items-center justify-center gap-2 mt-2 text-sm text-gray-500">
+          <div className="flex items-center justify-center gap-2 mt-2 text-sm text-gray-500 dark:text-gray-400">
             <Clock size={16} />
             <span>5分ごとに自動更新</span>
           </div>

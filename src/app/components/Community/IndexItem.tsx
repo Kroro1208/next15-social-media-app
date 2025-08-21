@@ -25,11 +25,11 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <div className="w-1 h-8 bg-gradient-to-b from-violet-500 to-purple-600 rounded-full" />
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 dark:from-violet-400 dark:via-purple-400 dark:to-blue-400 bg-clip-text text-transparent">
             すべての投稿
           </h2>
         </div>
-        <p className="text-slate-600 ml-7">
+        <p className="text-slate-600 dark:text-gray-300 ml-7">
           このスペースのすべての議論を探索してみましょう
         </p>
       </div>
@@ -48,7 +48,7 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
               href={routes.post(item.id.toString())}
               className="block group"
             >
-              <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:-translate-y-2 h-full flex flex-col relative">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-slate-100 dark:border-gray-700 overflow-hidden hover:shadow-2xl transition-all duration-500 group-hover:scale-[1.03] group-hover:-translate-y-2 h-full flex flex-col relative">
                 {/* Status Banner */}
                 <div
                   className={`h-2 ${
@@ -61,7 +61,7 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                 />
 
                 {/* 背景装飾 */}
-                <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-violet-500/5 to-purple-500/5 rounded-full group-hover:scale-125 transition-transform duration-500" />
+                <div className="absolute top-4 right-4 w-16 h-16 bg-gradient-to-br from-violet-500/5 to-purple-500/5 dark:from-violet-400/20 dark:to-purple-400/20 rounded-full group-hover:scale-125 transition-transform duration-500" />
 
                 {/* Header */}
                 <div className="p-6 pb-4 flex-shrink-0 relative">
@@ -71,13 +71,13 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                         <img
                           src={item.avatar_url}
                           alt="UserAvatar"
-                          className="w-12 h-12 rounded-2xl object-cover flex-shrink-0 shadow-lg ring-2 ring-white"
+                          className="w-12 h-12 rounded-2xl object-cover flex-shrink-0 shadow-lg ring-2 ring-white dark:ring-gray-600"
                         />
                       ) : (
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500 flex-shrink-0 shadow-lg ring-2 ring-white" />
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-500 via-purple-500 to-blue-500 flex-shrink-0 shadow-lg ring-2 ring-white dark:ring-gray-600" />
                       )}
                       <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-slate-800 text-lg line-clamp-2 leading-tight group-hover:text-violet-700 transition-colors duration-300">
+                        <h3 className="font-bold text-slate-800 dark:text-gray-100 text-lg line-clamp-2 leading-tight group-hover:text-violet-700 dark:group-hover:text-violet-300 transition-colors duration-300">
                           {item.title}
                         </h3>
                       </div>
@@ -88,24 +88,27 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                       <div
                         className={`p-2 rounded-xl shadow-lg ${
                           votingExpired
-                            ? "bg-slate-100"
+                            ? "bg-slate-100 dark:bg-gray-700"
                             : showPersuasionButton
-                              ? "bg-orange-100"
-                              : "bg-violet-100"
+                              ? "bg-orange-100 dark:bg-orange-900/30"
+                              : "bg-violet-100 dark:bg-violet-900/30"
                         }`}
                       >
                         {votingExpired ? (
                           <FaRegCalendarTimes
                             size={24}
-                            className="text-slate-500"
+                            className="text-slate-500 dark:text-gray-400"
                           />
                         ) : showPersuasionButton ? (
                           <AlertTriangle
                             size={24}
-                            className="text-orange-600"
+                            className="text-orange-600 dark:text-orange-400"
                           />
                         ) : (
-                          <Clock size={24} className="text-violet-600" />
+                          <Clock
+                            size={24}
+                            className="text-violet-600 dark:text-violet-400"
+                          />
                         )}
                       </div>
 
@@ -113,10 +116,10 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                         <span
                           className={`text-sm font-bold whitespace-nowrap px-3 py-1 rounded-lg shadow-sm ${
                             votingExpired
-                              ? "text-slate-600 bg-slate-100"
+                              ? "text-slate-600 dark:text-gray-300 bg-slate-100 dark:bg-gray-700"
                               : showPersuasionButton
-                                ? "text-orange-700 bg-orange-100"
-                                : "text-violet-700 bg-violet-100"
+                                ? "text-orange-700 dark:text-orange-300 bg-orange-100 dark:bg-orange-900/30"
+                                : "text-violet-700 dark:text-violet-300 bg-violet-100 dark:bg-violet-900/30"
                           }`}
                         >
                           {votingExpired ? "終了" : `残り${timeRemaining}`}
@@ -127,11 +130,11 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
 
                   {/* Badges */}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm bg-gradient-to-r from-violet-100 to-purple-100 text-violet-700 px-4 py-2 rounded-xl font-semibold shadow-sm">
+                    <span className="text-sm bg-gradient-to-r from-violet-100 to-purple-100 dark:from-violet-900/30 dark:to-purple-900/30 text-violet-700 dark:text-violet-300 px-4 py-2 rounded-xl font-semibold shadow-sm">
                       {item.communities?.name}
                     </span>
                     {hasUserVoted && (
-                      <span className="text-sm bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow-sm">
+                      <span className="text-sm bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 text-green-700 dark:text-green-300 px-4 py-2 rounded-xl flex items-center space-x-2 font-semibold shadow-sm">
                         <CheckCircle size={14} />
                         <span>投票済</span>
                       </span>

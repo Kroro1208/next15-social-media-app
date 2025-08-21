@@ -28,11 +28,11 @@ const VoteConfirmModal = ({
       />
 
       {/* モーダルコンテンツ */}
-      <div className="relative z-10 w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+      <div className="relative z-10 w-full max-w-md mx-4 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 overflow-hidden">
         {/* ヘッダー */}
         <div className="bg-gradient-to-r from-orange-500 to-red-500 p-6 text-white">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/20 rounded-lg">
+            <div className="p-2 bg-white/20 dark:bg-gray-700/40 rounded-lg">
               <AlertTriangle size={24} />
             </div>
             <div>
@@ -45,18 +45,22 @@ const VoteConfirmModal = ({
         {/* コンテンツ */}
         <div className="p-6 space-y-4">
           <div className="text-center space-y-3">
-            <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
-              <p className="text-gray-700 font-medium">
+            <div className="p-4 bg-orange-50 dark:bg-orange-900/30 rounded-lg border border-orange-200 dark:border-orange-700">
+              <p className="text-gray-700 dark:text-gray-300 font-medium">
                 現在の投票:{" "}
-                <span className="font-bold text-orange-700">{currentVote}</span>
+                <span className="font-bold text-orange-700 dark:text-orange-300">
+                  {currentVote}
+                </span>
               </p>
               <p className="text-gray-700 font-medium mt-1">
                 {voteType === currentVote ? "確定投票" : "変更先"}:{" "}
-                <span className="font-bold text-orange-700">{voteType}</span>
+                <span className="font-bold text-orange-700 dark:text-orange-300">
+                  {voteType}
+                </span>
               </p>
             </div>
 
-            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+            <div className="bg-red-50 dark:bg-red-900/30 rounded-lg p-4 border border-red-200 dark:border-red-700">
               <p className="text-red-700 font-semibold text-sm mb-2">
                 ⚠️ 重要な注意事項
               </p>

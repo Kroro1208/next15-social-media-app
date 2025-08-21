@@ -10,9 +10,9 @@ const HeaderStatus = () => {
     <div className="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-800 px-6 py-8 relative overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-4 left-8 w-32 h-32 border-2 border-white rounded-full"></div>
-        <div className="absolute bottom-6 right-12 w-24 h-24 border border-white rounded-full"></div>
-        <div className="absolute top-1/2 right-1/4 w-16 h-16 border border-white rounded-full"></div>
+        <div className="absolute top-4 left-8 w-32 h-32 border-2 border-white dark:border-gray-400 rounded-full"></div>
+        <div className="absolute bottom-6 right-12 w-24 h-24 border border-white dark:border-gray-400 rounded-full"></div>
+        <div className="absolute top-1/2 right-1/4 w-16 h-16 border border-white dark:border-gray-400 rounded-full"></div>
       </div>
 
       <div className="mx-auto xl:mr-80 relative z-10">
@@ -25,7 +25,7 @@ const HeaderStatus = () => {
 
         {/* Voting Dashboard */}
         <div className="grid grid-cols-4 gap-4 mb-4">
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 transition-all duration-300">
+          <div className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm border border-white/20 dark:border-gray-600/30 rounded-2xl p-5 text-white hover:bg-white/20 dark:hover:bg-gray-700/40 transition-all duration-300">
             <div className="flex items-center justify-between mb-2">
               <Vote className="w-7 h-7 text-blue-300" />
               <div className="text-right">
@@ -42,7 +42,7 @@ const HeaderStatus = () => {
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 transition-all duration-300">
+          <div className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm border border-white/20 dark:border-gray-600/30 rounded-2xl p-5 text-white hover:bg-white/20 dark:hover:bg-gray-700/40 transition-all duration-300">
             <div className="flex items-center justify-between mb-2">
               <BarChart3 className="w-7 h-7 text-emerald-300" />
               <div className="text-right">
@@ -59,7 +59,7 @@ const HeaderStatus = () => {
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-5 text-white hover:bg-white/20 transition-all duration-300">
+          <div className="bg-white/10 dark:bg-gray-800/30 backdrop-blur-sm border border-white/20 dark:border-gray-600/30 rounded-2xl p-5 text-white hover:bg-white/20 dark:hover:bg-gray-700/40 transition-all duration-300">
             <div className="flex items-center justify-between mb-2">
               <Activity className="w-7 h-7 text-orange-300" />
               <div className="text-right">

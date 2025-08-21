@@ -105,7 +105,7 @@ const CommunityList = () => {
           <Input
             type="text"
             placeholder="スペースを検索"
-            className="w-full pl-10 pr-4 py-2 text-black border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 text-black dark:text-white border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800"
             value={searchTerm}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               const value = (e.target as HTMLInputElement & { value: string })

@@ -180,7 +180,7 @@ const QualityScoreDisplay = ({
                 </div>
                 <div className="flex-1">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-black font-medium">
+                    <span className="text-sm text-black dark:text-white font-medium">
                       {score.total_quality_score.toFixed(1)}
                     </span>
                     <span className="text-xs text-gray-500">

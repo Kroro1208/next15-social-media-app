@@ -20,7 +20,7 @@ const VoteGageBar = ({
       </div>
 
       {/* グラフコンテナ */}
-      <div className="w-full h-8 bg-gray-200 rounded-md overflow-hidden flex">
+      <div className="w-full h-8 bg-gray-200 dark:bg-gray-700 rounded-md overflow-hidden flex">
         {/* 賛成バー */}
         <div
           className="h-full bg-green-500 flex items-center justify-center text-white text-xs font-bold"
@@ -39,7 +39,7 @@ const VoteGageBar = ({
       </div>
 
       {/* パーセント表示 */}
-      <div className="flex justify-between text-sm text-gray-600 mt-3">
+      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mt-3">
         <div>賛成: {Math.round(upVotePercentage)}%</div>
         <div>反対: {Math.round(downVotePercentage)}%</div>
       </div>

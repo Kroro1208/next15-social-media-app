@@ -174,7 +174,7 @@ const EmpathyPointsDisplay = ({
               {nextRank.description}
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div
               className="bg-gradient-to-r from-pink-500 to-red-500 h-2 rounded-full transition-all duration-300"
               style={{
@@ -194,14 +194,16 @@ const EmpathyPointsDisplay = ({
           {scoreBreakdown.map((item) => (
             <div
               key={item.label}
-              className="flex items-center text-slate-500 gap-3 p-2 bg-white rounded-lg"
+              className="flex items-center text-slate-500 dark:text-slate-400 gap-3 p-2 bg-white dark:bg-gray-800 rounded-lg"
             >
               <div className={`p-1 rounded ${item.color}`}>
                 <item.icon size={16} />
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">{item.label}</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {item.label}
+                  </span>
                   <span className="font-semibold">
                     {item.value.toLocaleString()}pt
                   </span>

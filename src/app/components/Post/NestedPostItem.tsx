@@ -55,12 +55,17 @@ const NestedPostItem = ({
       "border-l-green-300",
       "border-l-orange-300",
     ];
-    const bgColors = ["bg-white", "bg-slate-50", "bg-blue-50", "bg-green-50"];
+    const bgColors = [
+      "bg-white dark:bg-gray-800",
+      "bg-slate-50 dark:bg-slate-800",
+      "bg-blue-50 dark:bg-blue-900/30",
+      "bg-green-50 dark:bg-green-900/30",
+    ];
 
     return {
       indent: indentClasses[Math.min(nestLevel, 3)],
       borderColor: borderColors[nestLevel] || "border-l-slate-300",
-      bgColor: bgColors[nestLevel] || "bg-slate-50",
+      bgColor: bgColors[nestLevel] || "bg-slate-50 dark:bg-slate-800",
     };
   };
 
