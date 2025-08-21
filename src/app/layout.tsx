@@ -4,7 +4,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { TokenCleanup } from "../components/TokenCleanup";
 import "../index.css";
 import ClientProviders from "./components/ClientProviders";
-import Loading from "./components/Loading";
 import Navbar from "./components/Navbar";
 import { AuthGuard } from "./components/AuthGuard";
 import { PageTransitionProvider } from "../context/PageTransitionContext";
@@ -47,11 +46,19 @@ export default function RootLayout({
                 </Suspense>
 
                 <div className="container mx-auto px-4 py-6">
-                  {/* Issue #73: コンテンツ専用のSuspense境界 */}
+                  {/* コンテンツ専用のSuspense境界 - オーバーレイ形式 */}
                   <Suspense
                     fallback={
-                      <div className="flex items-center justify-center min-h-[20vh]">
-                        <Loading />
+                      <div className="fixed inset-0 z-40 flex items-center justify-center">
+                        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300" />
+                        <div className="relative z-10">
+                          <div className="flex flex-col items-center space-y-4">
+                            <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                            <p className="text-white text-sm font-medium drop-shadow-lg">
+                              ページを読み込み中...
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     }
                   >

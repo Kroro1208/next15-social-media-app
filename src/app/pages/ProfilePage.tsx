@@ -18,7 +18,6 @@ import { toast } from "react-toastify";
 import { supabase } from "../../supabase-client";
 import { calculateAllExistingScores } from "../../utils/calculateExistingScores";
 import ErrorMessage from "../components/ErrorMessage";
-import Loading from "../components/Loading";
 import PostItem from "../components/Post/PostItem";
 import type { PostType } from "../components/Post/PostList";
 import EmpathyPointsDisplay from "../components/Profile/EmpathyPointsDisplay";
@@ -208,8 +207,21 @@ const ProfilePage = () => {
     empathyScoreLoading ||
     empathyRankingLoading ||
     (profileLoading && !isOwnProfile)
-  )
-    return <Loading />;
+  ) {
+    return (
+      <div className="fixed inset-0 z-40 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300" />
+        <div className="relative z-10">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-white text-sm font-medium drop-shadow-lg">
+              プロフィールを読み込み中...
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (postsError) return <ErrorMessage error={postsError} />;
   if (statsError) return <ErrorMessage error={statsError} />;
 

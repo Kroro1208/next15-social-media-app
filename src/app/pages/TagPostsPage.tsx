@@ -7,7 +7,6 @@ import { supabase } from "../../supabase-client";
 import PostItem from "../components/Post/PostItem";
 import { PostType } from "../components/Post/PostList";
 import { Button } from "../components/ui/button";
-import { CardLoadingSpinner } from "../components/ui/LoadingSpinner";
 
 interface TagInfo {
   id: number;
@@ -239,8 +238,16 @@ const TagPostsPage = () => {
         {/* 投稿一覧 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isPostsLoading ? (
-            <div className="col-span-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/50 p-8">
-              <CardLoadingSpinner text="投稿を読み込み中..." />
+            <div className="fixed inset-0 z-40 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300" />
+              <div className="relative z-10">
+                <div className="flex flex-col items-center space-y-4">
+                  <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                  <p className="text-white text-sm font-medium drop-shadow-lg">
+                    投稿を読み込み中...
+                  </p>
+                </div>
+              </div>
             </div>
           ) : postsError ? (
             <div className="col-span-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/50 p-8 text-center">

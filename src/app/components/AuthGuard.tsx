@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "../hooks/useAuth";
-import Loading from "./Loading";
+import { PageLoadingSpinner } from "./ui/LoadingSpinner";
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -10,12 +10,21 @@ interface AuthGuardProps {
 export const AuthGuard = ({ children }: AuthGuardProps) => {
   const { loading } = useAuth();
 
-  // Issue #73: loading状態を適切に管理してクリック必要問題を解決
+  // 認証ローディング中はオーバーレイ表示
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loading />
-      </div>
+      <>
+        {children}
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Blur背景 */}
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-all duration-300" />
+
+          {/* ローディングスピナー */}
+          <div className="relative z-10">
+            <PageLoadingSpinner text="認証確認中..." />
+          </div>
+        </div>
+      </>
     );
   }
 
