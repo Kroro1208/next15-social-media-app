@@ -6,7 +6,11 @@ export async function GET(request: NextRequest) {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
 
+    console.log("Callback URL:", request.url);
+    console.log("Code param:", code);
+
     if (!code) {
+      console.log("No code found in callback");
       return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=no_code`);
     }
 
@@ -14,22 +18,32 @@ export async function GET(request: NextRequest) {
     const supabaseKey = process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"];
 
     if (!supabaseUrl || !supabaseKey) {
+      console.log("Missing Supabase environment variables");
       return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=config_error`);
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        flowType: 'pkce',
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: false,
+      },
+    });
     
+    console.log("Attempting to exchange code for session");
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
-      console.error("Auth error:", error.message);
-      return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=auth_failed`);
+      console.error("Auth exchange error:", error.message, error);
+      return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=auth_failed&details=${encodeURIComponent(error.message)}`);
     }
 
     if (data.session) {
-      // 認証成功 - ホームページにリダイレクト
+      console.log("Session created successfully");
       return NextResponse.redirect(`${requestUrl.origin}/`);
     } else {
+      console.log("No session in response data");
       return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=no_session`);
     }
 
