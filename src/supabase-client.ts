@@ -27,7 +27,8 @@ export const supabase = createClient(finalURL, finalKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false, // PKCEフロー使用時はfalseに設定してセキュリティ強化
+    flowType: "pkce", // PKCEフローを明示的に指定
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     debug: false,
   },

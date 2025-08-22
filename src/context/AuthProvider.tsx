@@ -130,12 +130,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = useCallback(async () => {
     try {
-      const redirectTo = `${window.location.origin}/auth/callback`;
+      // 本番環境では正しいドメインを使用
+      const isProduction = window.location.hostname !== 'localhost';
+      const redirectTo = isProduction 
+        ? 'https://social-media-app-jade-three.vercel.app/auth/callback'
+        : `${window.location.origin}/auth/callback`;
 
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: redirectTo,
+          // PKCEフローのオプションを明示的に指定
+          skipBrowserRedirect: false,
         },
       });
 
