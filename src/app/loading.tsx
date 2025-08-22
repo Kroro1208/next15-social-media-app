@@ -1,9 +1,5 @@
-import Loading from "./components/Loading";
+import { OverlayLoadingSpinner } from "./components/ui/LoadingSpinner";
 
 export default function LoadingPage() {
-  return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Loading />
-    </div>
-  );
+  return <OverlayLoadingSpinner text="ページを読み込み中..." />;
 }
