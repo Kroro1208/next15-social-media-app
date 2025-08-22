@@ -42,3 +42,4 @@ build/
 
 # Documentation with sensitive information
 AWS_DEPLOYMENT_ARCHITECTURE.md
+.vercel
