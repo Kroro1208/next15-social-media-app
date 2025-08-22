@@ -154,7 +154,7 @@ const AdminReportsPage = () => {
             
             <select 
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)
+              onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
             >
               <option value="all">全てのステータス</option>
