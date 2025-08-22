@@ -6,10 +6,11 @@ import { RiCloseLargeFill } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
 import { VscSignOut } from "react-icons/vsc";
 
-import { Coins } from "lucide-react";
+import { Coins, Shield } from "lucide-react";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../hooks/useLanguage";
 import { useUserPoints } from "../hooks/useUserPoints";
+import { useAdmin } from "../hooks/useAdmin";
 import { Suspense, memo } from "react";
 import { routeProtection } from "../../config/RouteProtection";
 import NotificationDropdown from "./Notification/NotificationDropdown";
@@ -35,6 +36,7 @@ UserPointsDisplay.displayName = "UserPointsDisplay";
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { signOut, user } = useAuth();
+  const { isAdmin } = useAdmin();
   const { t } = useLanguage();
   const routes = routeProtection.getRoutes();
 
@@ -78,6 +80,15 @@ export default function Navbar() {
               >
                 {t("ranking.title")}
               </NavigationLink>
+              {isAdmin && (
+                <NavigationLink
+                  href="/admin"
+                  className="text-red-400 hover:text-red-300 transition-colors whitespace-nowrap flex items-center gap-1"
+                >
+                  <Shield size={16} />
+                  管理者
+                </NavigationLink>
+              )}
             </div>
 
             {/* 認証セクション - 右端に配置 */}
@@ -218,6 +229,16 @@ export default function Navbar() {
                 >
                   {t("ranking.title")}
                 </NavigationLink>
+                {isAdmin && (
+                  <NavigationLink
+                    href="/admin"
+                    className="flex px-3 py-2 rounded-md text-base font-medium text-red-400 hover:text-red-300 hover:bg-gray-700 transition-colors items-center gap-2"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <Shield size={16} />
+                    管理者
+                  </NavigationLink>
+                )}
 
                 {/* モバイル用認証ボタン */}
                 {user ? (
