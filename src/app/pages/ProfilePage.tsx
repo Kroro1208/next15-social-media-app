@@ -1,6 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 
 import { routeProtection } from "@/config/RouteProtection";
 import {
@@ -236,9 +237,11 @@ const ProfilePage = () => {
             {/* アバター */}
             <div className="flex-shrink-0">
               {avatarUrl ? (
-                <img
+                <Image
                   src={avatarUrl}
                   alt={displayName}
+                  width={96}
+                  height={96}
                   className="w-24 h-24 rounded-full object-cover border-4 border-gray-100 dark:border-gray-700"
                 />
               ) : (

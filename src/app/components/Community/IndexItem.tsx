@@ -1,6 +1,7 @@
 import { routeProtection } from "@/config/RouteProtection";
 import { getTimeRemaining, isPersuasionTime } from "@/utils/formatTime";
 import { AlertTriangle, CheckCircle, Clock, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { FaRegCalendarTimes } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
@@ -68,9 +69,11 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3 min-w-0 flex-1">
                       {item?.avatar_url ? (
-                        <img
+                        <Image
                           src={item.avatar_url}
                           alt="UserAvatar"
+                          width={40}
+                          height={40}
                           className="w-12 h-12 rounded-2xl object-cover flex-shrink-0 shadow-lg ring-2 ring-white dark:ring-gray-600"
                         />
                       ) : (
@@ -145,9 +148,11 @@ const IndexItem = ({ communityItemData, votedPostIds }: IndexItemProps) => {
                 {/* Image */}
                 {item.image_url && (
                   <div className="px-6 flex-shrink-0">
-                    <img
+                    <Image
                       src={item.image_url}
                       alt={item.title}
+                      width={600}
+                      height={192}
                       className="w-full h-48 object-cover rounded-2xl shadow-lg group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>

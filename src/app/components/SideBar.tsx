@@ -8,6 +8,7 @@ import {
   Users,
   Vote,
 } from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../hooks/useAuth";
 import { useLanguage } from "../hooks/useLanguage";
@@ -80,9 +81,11 @@ const SideBar = () => {
           <div className="absolute bottom-4 left-4 right-4">
             <div className="flex items-center space-x-3 p-3 rounded-xl bg-slate-700/50 hover:bg-slate-700 transition-colors duration-200 cursor-pointer">
               {user.user_metadata?.["avatar_url"] ? (
-                <img
+                <Image
                   src={user.user_metadata["avatar_url"]}
-                  alt="Profile"
+                  alt="ユーザーのプロフィール"
+                  width={32}
+                  height={32}
                   className="w-8 h-8 rounded-full object-cover"
                 />
               ) : (

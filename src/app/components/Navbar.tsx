@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { CgMenuGridO } from "react-icons/cg";
 import { RiCloseLargeFill } from "react-icons/ri";
+import Image from "next/image";
 
 import { FaRegUser } from "react-icons/fa";
 import { VscSignOut } from "react-icons/vsc";
@@ -118,9 +119,11 @@ export default function Navbar() {
                     {user ? (
                       <div className="flex-shrink-0">
                         {user.user_metadata?.["avatar_url"] && (
-                          <img
-                            alt="user"
+                          <Image
+                            alt="ユーザーのアバター"
                             src={user.user_metadata["avatar_url"]}
+                            width={40}
+                            height={40}
                             className="rounded-full size-10 object-cover"
                           />
                         )}

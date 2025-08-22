@@ -3,6 +3,7 @@ import { routeProtection } from "@/config/RouteProtection";
 import { supabase } from "@/supabase-client";
 import { useQuery } from "@tanstack/react-query";
 import { Award, Crown, Medal, Star, TrendingUp, Trophy } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import ErrorMessage from "../components/ErrorMessage";
 import Loading from "../components/Loading";
@@ -186,9 +187,11 @@ const UserRankingPage = () => {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
                         {ranking.user_metadata?.avatar_url ? (
-                          <img
+                          <Image
                             src={ranking.user_metadata.avatar_url}
-                            alt="Avatar"
+                            alt="ユーザーのアバター"
+                            width={40}
+                            height={40}
                             className="size-10 rounded-full object-cover"
                           />
                         ) : (

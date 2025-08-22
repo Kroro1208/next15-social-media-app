@@ -16,6 +16,7 @@ import {
   Mail,
   Calendar,
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -150,9 +151,11 @@ export default function SettingsPage() {
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
                   {profileData.avatarUrl ? (
-                    <img
+                    <Image
                       src={profileData.avatarUrl}
-                      alt="Avatar"
+                      alt="アバター画像"
+                      width={64}
+                      height={64}
                       className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                     />
                   ) : (
@@ -190,9 +193,11 @@ export default function SettingsPage() {
                 <div className="flex items-center space-x-4">
                   <div className="relative">
                     {profileData.avatarUrl ? (
-                      <img
+                      <Image
                         src={profileData.avatarUrl}
-                        alt="Avatar"
+                        alt="アバター画像"
+                        width={64}
+                        height={64}
                         className="w-16 h-16 rounded-full object-cover border-2 border-slate-200 dark:border-slate-700"
                       />
                     ) : (

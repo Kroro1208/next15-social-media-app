@@ -1,6 +1,7 @@
 import { useLanguage } from "@/app/hooks/useLanguage";
 import { Label } from "@radix-ui/react-label";
 import { AlertTriangle, QrCode } from "lucide-react";
+import Image from "next/image";
 import React, { RefObject } from "react";
 import { Button } from "../ui/button";
 import {
@@ -71,9 +72,11 @@ const MfaModal = ({
               {showQRCode ? (
                 <>
                   <div className="flex justify-center">
-                    <img
+                    <Image
                       src={enrollData.totp.qr_code}
                       alt="MFA QR Code"
+                      width={200}
+                      height={200}
                       className="border rounded-lg"
                     />
                   </div>

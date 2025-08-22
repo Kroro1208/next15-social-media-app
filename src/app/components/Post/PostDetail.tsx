@@ -354,10 +354,10 @@ const PostDetail = ({ postId }: Props) => {
         <div className="flex items-center space-x-4">
           {data?.avatar_url && (
             <Link href={routes.profile(data.user_id)}>
-              <img
+              <Image
                 height={48}
                 width={48}
-                src={avatarUrl || undefined}
+                src={avatarUrl || ""}
                 alt="投稿者のアバター"
                 className="w-12 h-12 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 hover:border-green-400 dark:hover:border-green-400 transition-colors cursor-pointer"
               />

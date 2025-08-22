@@ -1,5 +1,6 @@
 "use client";
 import { CheckCircle, Trash2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { PostType } from "./PostList";
 
@@ -145,9 +146,11 @@ const PostItem = ({ post }: PostItemType) => {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
                 {post?.avatar_url ? (
-                  <img
+                  <Image
                     src={post.avatar_url}
-                    alt="User"
+                    alt="ユーザーアバター"
+                    width={24}
+                    height={24}
                     className="w-6 h-6 rounded-full object-cover border-2 border-indigo-300"
                   />
                 ) : (
@@ -172,9 +175,11 @@ const PostItem = ({ post }: PostItemType) => {
           <div className="mb-4 h-32">
             {post.image_url && (
               <div className="relative h-full">
-                <img
+                <Image
                   src={post.image_url}
                   alt={post.title}
+                  width={300}
+                  height={128}
                   className="w-full h-full object-cover rounded-xl border-2 border-gray-200 dark:border-gray-600"
                 />
                 {!hasUserVoted && !votingExpired && (

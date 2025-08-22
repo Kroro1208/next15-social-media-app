@@ -1,19 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAdmin, ContentReport } from "../../hooks/useAdmin";
+import { useAdmin } from "../../hooks/useAdmin";
 import { useAuth } from "../../hooks/useAuth";
 import { 
   ArrowLeft, 
   AlertTriangle, 
-  Search, 
   Filter, 
   Eye,
   Check,
   X,
-  Clock,
-  User,
-  MessageSquare
+  Clock
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
@@ -24,7 +21,6 @@ const AdminReportsPage = () => {
   
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'investigating' | 'resolved' | 'dismissed'>('all');
   const [reasonFilter, setReasonFilter] = useState<'all' | string>('all');
-  const [selectedReport, setSelectedReport] = useState<ContentReport | null>(null);
   const [resolution, setResolution] = useState('');
 
   useEffect(() => {
@@ -58,7 +54,6 @@ const AdminReportsPage = () => {
       status,
       resolution: resolutionText || resolution,
     });
-    setSelectedReport(null);
     setResolution('');
   };
 

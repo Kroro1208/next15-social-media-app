@@ -3,6 +3,7 @@
 import { ImageIcon, X } from "lucide-react";
 import { FieldErrors, UseFormRegister } from "react-hook-form";
 import { z } from "zod";
+import Image from "next/image";
 import { useLanguage } from "../../hooks/useLanguage";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
@@ -60,9 +61,11 @@ const ImageUploadSection = ({
         <Card className="mt-6 overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-2xl shadow-lg">
           <CardContent className="p-6">
             <div className="relative group/image">
-              <img
+              <Image
                 src={imagePreview}
                 alt={t("create.post.image.preview")}
+                width={600}
+                height={400}
                 className="w-full h-auto rounded-xl object-contain max-h-96 transition-transform duration-300 group-hover/image:scale-[1.02]"
               />
               <Button

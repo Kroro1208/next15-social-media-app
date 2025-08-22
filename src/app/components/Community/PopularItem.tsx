@@ -1,6 +1,7 @@
 import { routeProtection } from "@/config/RouteProtection";
 import { getTimeRemaining, isVotingExpired } from "@/utils/formatTime";
 import { CheckCircle, Flame, Trophy, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { CommunityItemType } from "./CommunityItem";
 
@@ -139,9 +140,11 @@ const PopularItem = ({ communityItemData, votedPostIds }: PopularItemProps) => {
                                 {/* タイトルとコミュニティ */}
                                 <div className="flex items-center space-x-2 mb-1">
                                   {post.avatar_url ? (
-                                    <img
+                                    <Image
                                       src={post.avatar_url}
                                       alt="UserAvatar"
+                                      width={20}
+                                      height={20}
                                       className="w-5 h-5 rounded-full object-cover"
                                     />
                                   ) : (
@@ -197,8 +200,10 @@ const PopularItem = ({ communityItemData, votedPostIds }: PopularItemProps) => {
                                 )}
 
                                 {post.image_url && (
-                                  <img
+                                  <Image
                                     src={post.image_url}
+                                    width={400}
+                                    height={200}
                                     alt={post.title}
                                     className="w-12 h-12 object-cover rounded shadow-sm"
                                   />

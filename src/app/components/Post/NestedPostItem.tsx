@@ -7,6 +7,7 @@ import {
   MessageSquarePlus,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { PostType } from "./PostList";
 
@@ -109,9 +110,11 @@ const NestedPostItem = ({
               )}
 
               {post?.avatar_url ? (
-                <img
+                <Image
                   src={post.avatar_url}
-                  alt="UserAvatar"
+                  alt="ユーザーのアバター"
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full object-cover"
                 />
               ) : (
@@ -193,9 +196,11 @@ const NestedPostItem = ({
         {/* Image */}
         {post.image_url && (
           <div className="px-4">
-            <img
+            <Image
               src={post.image_url}
               alt={post.title}
+              width={400}
+              height={128}
               className="w-full h-32 object-cover rounded-lg"
             />
           </div>

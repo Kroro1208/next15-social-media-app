@@ -2,6 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import Image from "next/image";
 
 import {
   Clock,
@@ -518,9 +519,11 @@ const CreateNestedPost = ({
             <Card className="mt-6 overflow-hidden border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-2xl shadow-lg">
               <CardContent className="p-6">
                 <div className="relative group/image">
-                  <img
+                  <Image
                     src={imagePreview}
-                    alt="プレビュー"
+                    alt="画像のプレビュー"
+                    width={600}
+                    height={400}
                     className="w-full h-auto rounded-xl object-contain max-h-96 transition-transform duration-300 group-hover/image:scale-[1.02]"
                   />
                   <Button

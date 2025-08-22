@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { routeProtection } from "@/config/RouteProtection";
@@ -82,9 +83,11 @@ const RankingList = ({
                   {/* コミュニティタグ */}
                   <div className="flex items-center space-x-2 mb-2">
                     {post.avatar_url ? (
-                      <img
+                      <Image
                         src={post.avatar_url}
-                        alt="UserAvatar"
+                        alt="ユーザーのアバター"
+                        width={24}
+                        height={24}
                         className="w-6 h-6 rounded-full object-cover"
                       />
                     ) : (
@@ -169,9 +172,11 @@ const RankingList = ({
 
                   {/* 画像 */}
                   {post.image_url && (
-                    <img
+                    <Image
                       src={post.image_url}
                       alt={post.title}
+                      width={80}
+                      height={80}
                       className="w-20 h-20 object-cover rounded-lg shadow-md"
                     />
                   )}
