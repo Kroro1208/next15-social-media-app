@@ -6,6 +6,13 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get("code");
   const error = requestUrl.searchParams.get("error");
 
+  console.log("Auth callback called:", { 
+    url: requestUrl.href, 
+    code: code ? "present" : "missing", 
+    error,
+    origin: requestUrl.origin 
+  });
+
   // エラーパラメータがある場合（OAuth認証が拒否された等）
   if (error) {
     console.error("Auth callback: OAuth error:", error);
@@ -14,29 +21,54 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // 環境変数の確認
+  const supabaseUrl = process.env["NEXT_PUBLIC_SUPABASE_URL"];
+  const supabaseAnonKey = process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"];
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("Missing Supabase environment variables");
+    return NextResponse.redirect(
+      `${requestUrl.origin}/auth/login?error=server_config_error`,
+    );
+  }
+
   // PKCEフローではcodeパラメータが必要
   if (code) {
-    const supabase = createClient(
-      process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
-      process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
-    );
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        flowType: "pkce",
+        autoRefreshToken: true,
+        persistSession: true,
+      },
+    });
 
     try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
+      console.log("Attempting to exchange code for session...");
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
       if (error) {
-        console.error("Auth callback error:", error);
+        console.error("Auth callback error:", {
+          message: error.message,
+          status: error.status,
+          details: error,
+        });
         return NextResponse.redirect(
-          `${requestUrl.origin}/auth/login?error=callback_failed`,
+          `${requestUrl.origin}/auth/login?error=callback_failed&details=${encodeURIComponent(error.message)}`,
         );
       }
+
+      console.log("Auth callback success:", { 
+        user: data.user?.id, 
+        session: data.session ? "present" : "missing" 
+      });
 
       // 成功時はホームページにリダイレクト
       return NextResponse.redirect(`${requestUrl.origin}/`);
     } catch (error) {
-      console.error("Auth callback error:", error);
+      console.error("Auth callback unexpected error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
       return NextResponse.redirect(
-        `${requestUrl.origin}/auth/login?error=callback_failed`,
+        `${requestUrl.origin}/auth/login?error=callback_failed&details=${encodeURIComponent(errorMessage)}`,
       );
     }
   }
