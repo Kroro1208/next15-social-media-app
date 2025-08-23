@@ -5,9 +5,21 @@ export async function GET(request: NextRequest) {
   try {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
+    const oauthError = requestUrl.searchParams.get("error");
+    const error_description = requestUrl.searchParams.get("error_description");
 
-    console.log("Callback URL:", request.url);
+    console.log("=== OAuth Callback Debug ===");
+    console.log("Full callback URL:", request.url);
+    console.log("All URL parameters:", Object.fromEntries(requestUrl.searchParams.entries()));
     console.log("Code param:", code);
+    console.log("Error param:", oauthError);
+    console.log("Error description:", error_description);
+    console.log("=== End Debug ===");
+
+    if (oauthError) {
+      console.log("OAuth error received:", oauthError, error_description);
+      return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=oauth_error&details=${encodeURIComponent(error_description || oauthError)}`);
+    }
 
     if (!code) {
       console.log("No code found in callback");

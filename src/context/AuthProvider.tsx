@@ -132,13 +132,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       console.log('Google sign in started');
       
-      const redirectTo = 'https://social-media-app-jade-three.vercel.app/auth/callback';
-      console.log('Redirect URL:', redirectTo);
-
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: redirectTo,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
 
