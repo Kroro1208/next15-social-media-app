@@ -3,25 +3,34 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "../../hooks/useAdmin";
 import { useAuth } from "../../hooks/useAuth";
-import { 
-  ArrowLeft, 
-  AlertTriangle, 
-  Filter, 
+import {
+  ArrowLeft,
+  AlertTriangle,
+  Filter,
   Eye,
   Check,
   X,
-  Clock
+  Clock,
 } from "lucide-react";
 import { Button } from "../../components/ui/button";
 
 const AdminReportsPage = () => {
   const { user, loading: isAuthLoading } = useAuth();
-  const { isAdmin, isLoadingAdmin, contentReports, isLoadingReports, handleReport, isHandlingReport } = useAdmin();
+  const {
+    isAdmin,
+    isLoadingAdmin,
+    contentReports,
+    isLoadingReports,
+    handleReport,
+    isHandlingReport,
+  } = useAdmin();
   const router = useRouter();
-  
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'investigating' | 'resolved' | 'dismissed'>('all');
-  const [reasonFilter, setReasonFilter] = useState<'all' | string>('all');
-  const [resolution, setResolution] = useState('');
+
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "pending" | "investigating" | "resolved" | "dismissed"
+  >("all");
+  const [reasonFilter, setReasonFilter] = useState<"all" | string>("all");
+  const [resolution, setResolution] = useState("");
 
   useEffect(() => {
     if (!isAuthLoading && !isLoadingAdmin) {
@@ -33,48 +42,58 @@ const AdminReportsPage = () => {
   }, [user, isAdmin, isAuthLoading, isLoadingAdmin, router]);
 
   // フィルタリング済みレポート
-  const filteredReports = contentReports?.filter(report => {
-    if (statusFilter !== 'all' && report.status !== statusFilter) return false;
-    if (reasonFilter !== 'all' && report.report_reason !== reasonFilter) return false;
-    return true;
-  }) || [];
+  const filteredReports =
+    contentReports?.filter((report) => {
+      if (statusFilter !== "all" && report.status !== statusFilter)
+        return false;
+      if (reasonFilter !== "all" && report.report_reason !== reasonFilter)
+        return false;
+      return true;
+    }) || [];
 
   // 統計
   const stats = {
     total: contentReports?.length || 0,
-    pending: contentReports?.filter(r => r.status === 'pending').length || 0,
-    investigating: contentReports?.filter(r => r.status === 'investigating').length || 0,
-    resolved: contentReports?.filter(r => r.status === 'resolved').length || 0,
-    dismissed: contentReports?.filter(r => r.status === 'dismissed').length || 0,
+    pending: contentReports?.filter((r) => r.status === "pending").length || 0,
+    investigating:
+      contentReports?.filter((r) => r.status === "investigating").length || 0,
+    resolved:
+      contentReports?.filter((r) => r.status === "resolved").length || 0,
+    dismissed:
+      contentReports?.filter((r) => r.status === "dismissed").length || 0,
   };
 
-  const handleReportAction = (reportId: number, status: 'investigating' | 'resolved' | 'dismissed', resolutionText?: string) => {
+  const handleReportAction = (
+    reportId: number,
+    status: "investigating" | "resolved" | "dismissed",
+    resolutionText?: string,
+  ) => {
     handleReport({
       reportId,
       status,
       resolution: resolutionText || resolution,
     });
-    setResolution('');
+    setResolution("");
   };
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      investigating: 'bg-blue-100 text-blue-800',
-      resolved: 'bg-green-100 text-green-800',
-      dismissed: 'bg-gray-100 text-gray-800',
+      pending: "bg-yellow-100 text-yellow-800",
+      investigating: "bg-blue-100 text-blue-800",
+      resolved: "bg-green-100 text-green-800",
+      dismissed: "bg-gray-100 text-gray-800",
     };
     return badges[status as keyof typeof badges] || badges.pending;
   };
 
   const getReasonLabel = (reason: string) => {
     const labels = {
-      spam: 'スパム',
-      harassment: 'ハラスメント',
-      hate_speech: 'ヘイトスピーチ',
-      inappropriate_content: '不適切なコンテンツ',
-      misinformation: 'デマ・誤情報',
-      other: 'その他',
+      spam: "スパム",
+      harassment: "ハラスメント",
+      hate_speech: "ヘイトスピーチ",
+      inappropriate_content: "不適切なコンテンツ",
+      misinformation: "デマ・誤情報",
+      other: "その他",
     };
     return labels[reason as keyof typeof labels] || reason;
   };
@@ -98,8 +117,8 @@ const AdminReportsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 size="sm"
                 onClick={() => router.push("/admin")}
                 className="text-gray-600 hover:text-gray-900"
@@ -119,23 +138,33 @@ const AdminReportsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="text-sm text-gray-600">総報告数</div>
-            <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+            <div className="text-2xl font-bold text-gray-900">
+              {stats.total}
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="text-sm text-gray-600">未処理</div>
-            <div className="text-2xl font-bold text-yellow-600">{stats.pending}</div>
+            <div className="text-2xl font-bold text-yellow-600">
+              {stats.pending}
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="text-sm text-gray-600">調査中</div>
-            <div className="text-2xl font-bold text-blue-600">{stats.investigating}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {stats.investigating}
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="text-sm text-gray-600">解決済み</div>
-            <div className="text-2xl font-bold text-green-600">{stats.resolved}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {stats.resolved}
+            </div>
           </div>
           <div className="bg-white rounded-lg shadow-sm border p-4">
             <div className="text-sm text-gray-600">却下</div>
-            <div className="text-2xl font-bold text-gray-600">{stats.dismissed}</div>
+            <div className="text-2xl font-bold text-gray-600">
+              {stats.dismissed}
+            </div>
           </div>
         </div>
 
@@ -144,12 +173,16 @@ const AdminReportsPage = () => {
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="h-4 w-4 text-gray-500" />
-              <span className="text-sm font-medium text-gray-700">フィルタ:</span>
+              <span className="text-sm font-medium text-gray-700">
+                フィルタ:
+              </span>
             </div>
-            
-            <select 
+
+            <select
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+              onChange={(e) =>
+                setStatusFilter(e.target.value as typeof statusFilter)
+              }
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
             >
               <option value="all">全てのステータス</option>
@@ -159,7 +192,7 @@ const AdminReportsPage = () => {
               <option value="dismissed">却下</option>
             </select>
 
-            <select 
+            <select
               value={reasonFilter}
               onChange={(e) => setReasonFilter(e.target.value)}
               className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
@@ -203,38 +236,58 @@ const AdminReportsPage = () => {
                         <div className="flex items-start gap-4">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadge(report.status)}`}>
-                                {report.status === 'pending' ? '未処理' :
-                                 report.status === 'investigating' ? '調査中' :
-                                 report.status === 'resolved' ? '解決済み' : '却下'}
+                              <span
+                                className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusBadge(report.status)}`}
+                              >
+                                {report.status === "pending"
+                                  ? "未処理"
+                                  : report.status === "investigating"
+                                    ? "調査中"
+                                    : report.status === "resolved"
+                                      ? "解決済み"
+                                      : "却下"}
                               </span>
                               <span className="text-sm text-gray-600">
                                 {getReasonLabel(report.report_reason)}
                               </span>
                               <span className="text-sm text-gray-500">
-                                {report.reported_content_type === 'post' ? '投稿' : 'コメント'} ID: {report.reported_content_id}
+                                {report.reported_content_type === "post"
+                                  ? "投稿"
+                                  : "コメント"}{" "}
+                                ID: {report.reported_content_id}
                               </span>
                             </div>
-                            
+
                             {report.description && (
-                              <p className="text-gray-900 mb-2">{report.description}</p>
+                              <p className="text-gray-900 mb-2">
+                                {report.description}
+                              </p>
                             )}
-                            
+
                             <div className="flex items-center gap-4 text-sm text-gray-500 mb-2">
                               <span className="flex items-center gap-1">
                                 <Clock className="h-4 w-4" />
-                                {new Date(report.created_at).toLocaleString("ja-JP")}
+                                {new Date(report.created_at).toLocaleString(
+                                  "ja-JP",
+                                )}
                               </span>
                               <span>報告者: {report.reporter_user_id}</span>
                             </div>
-                            
+
                             {report.resolution && (
                               <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                                <div className="text-sm font-medium text-gray-700">処理結果:</div>
-                                <div className="text-sm text-gray-600 mt-1">{report.resolution}</div>
+                                <div className="text-sm font-medium text-gray-700">
+                                  処理結果:
+                                </div>
+                                <div className="text-sm text-gray-600 mt-1">
+                                  {report.resolution}
+                                </div>
                                 {report.handled_at && (
                                   <div className="text-xs text-gray-500 mt-1">
-                                    {new Date(report.handled_at).toLocaleString("ja-JP")} に処理
+                                    {new Date(report.handled_at).toLocaleString(
+                                      "ja-JP",
+                                    )}{" "}
+                                    に処理
                                   </div>
                                 )}
                               </div>
@@ -248,13 +301,15 @@ const AdminReportsPage = () => {
                           <Eye className="h-4 w-4 mr-1" />
                           詳細
                         </Button>
-                        
-                        {report.status === 'pending' && (
+
+                        {report.status === "pending" && (
                           <>
                             <Button
                               variant="outline"
                               size="sm"
-                              onClick={() => handleReportAction(report.id, 'investigating')}
+                              onClick={() =>
+                                handleReportAction(report.id, "investigating")
+                              }
                               disabled={isHandlingReport}
                             >
                               <Clock className="h-4 w-4 mr-1" />
@@ -264,9 +319,14 @@ const AdminReportsPage = () => {
                               variant="destructive"
                               size="sm"
                               onClick={() => {
-                                const reason = prompt("却下理由を入力してください:");
+                                const reason =
+                                  prompt("却下理由を入力してください:");
                                 if (reason) {
-                                  handleReportAction(report.id, 'dismissed', reason);
+                                  handleReportAction(
+                                    report.id,
+                                    "dismissed",
+                                    reason,
+                                  );
                                 }
                               }}
                               disabled={isHandlingReport}
@@ -276,15 +336,20 @@ const AdminReportsPage = () => {
                             </Button>
                           </>
                         )}
-                        
-                        {report.status === 'investigating' && (
+
+                        {report.status === "investigating" && (
                           <Button
                             variant="default"
                             size="sm"
                             onClick={() => {
-                              const reason = prompt("解決内容を入力してください:");
+                              const reason =
+                                prompt("解決内容を入力してください:");
                               if (reason) {
-                                handleReportAction(report.id, 'resolved', reason);
+                                handleReportAction(
+                                  report.id,
+                                  "resolved",
+                                  reason,
+                                );
                               }
                             }}
                             disabled={isHandlingReport}

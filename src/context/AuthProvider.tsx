@@ -25,20 +25,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        console.log('Initializing auth...');
-        
+        console.log("Initializing auth...");
+
         // URLフラグメントからセッションを取得する場合
-        if (typeof window !== 'undefined' && window.location.hash) {
-          console.log('URL has hash, attempting to get session from URL');
+        if (typeof window !== "undefined" && window.location.hash) {
+          console.log("URL has hash, attempting to get session from URL");
           const { data, error } = await supabase.auth.getSession();
-          console.log('getSession result:', { data, error });
+          console.log("getSession result:", { data, error });
         }
-        
+
         // 通常のセッション取得
         supabase.auth
           .getSession()
           .then(({ data: { session }, error }) => {
-            console.log('Session check result:', { session: session?.user?.email, error });
+            console.log("Session check result:", {
+              session: session?.user?.email,
+              error,
+            });
             if (error && !error.message.includes("Refresh Token Not Found")) {
               console.error("Error getting session:", error);
               setUser(null);
@@ -140,10 +143,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = useCallback(async () => {
     try {
-      console.log('=== Google OAuth Debug ===');
-      console.log('Current URL:', window.location.href);
-      console.log('Origin:', window.location.origin);
-      console.log('Redirect URL will be:', `${window.location.origin}/auth/callback`);
+      console.log("=== Google OAuth Debug ===");
+      console.log("Current URL:", window.location.href);
+      console.log("Origin:", window.location.origin);
+      console.log(
+        "Redirect URL will be:",
+        `${window.location.origin}/auth/callback`,
+      );
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -152,18 +158,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      console.log('OAuth result:', { data, error });
+      console.log("OAuth result:", { data, error });
+
+      if (data?.url) {
+        console.log("Supabase OAuth URL:", data.url);
+        // OAuth URLを解析して設定を確認
+        try {
+          const oauthUrl = new URL(data.url);
+          console.log("OAuth URL host:", oauthUrl.host);
+          console.log(
+            "OAuth URL search params:",
+            Object.fromEntries(oauthUrl.searchParams.entries()),
+          );
+        } catch (e) {
+          console.log("Failed to parse OAuth URL:", e);
+        }
+      }
 
       if (error) {
         console.error("Google sign in error:", error);
         alert(`認証エラー: ${error.message}`);
       } else {
-        console.log('OAuth redirect initiated successfully');
-        console.log('Data:', data);
+        console.log("OAuth redirect initiated successfully");
+        console.log("Data:", data);
+
+        // 一時的にリダイレクトを止めてURLを確認
+        if (data?.url) {
+          const shouldProceed = confirm(
+            `OAuth URL: ${data.url}\n\nこのURLで認証を続行しますか？`,
+          );
+          if (shouldProceed) {
+            window.location.href = data.url;
+          }
+          return; // 自動リダイレクトを防ぐ
+        }
       }
     } catch (error) {
       console.error("Sign in error:", error);
-      alert(`エラー: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(
+        `エラー: ${error instanceof Error ? error.message : "Unknown error"}`,
+      );
     }
   }, []);
 
