@@ -25,12 +25,11 @@ const finalKey = supabaseAnonKey || "dummy-anon-key";
 
 export const supabase = createClient(finalURL, finalKey, {
   auth: {
-    flowType: 'pkce',
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: true,
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
-    debug: true,
+    debug: process.env.NODE_ENV === 'development',
   },
 });
 
