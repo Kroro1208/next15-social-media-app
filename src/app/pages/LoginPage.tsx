@@ -119,10 +119,16 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleAuth = () => {
+  const handleGoogleAuth = async () => {
     setLoading(true);
-    signInWithGoogle();
-    setLoading(false);
+    try {
+      await signInWithGoogle();
+    } catch (error) {
+      console.error('Google auth error:', error);
+      setError('Google認証でエラーが発生しました');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const switchMode = () => {
