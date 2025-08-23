@@ -9,6 +9,12 @@ export async function GET(request: NextRequest) {
     console.log("=== OAuth Callback Debug ===");
     console.log("Full callback URL:", request.url);
     console.log("All URL parameters:", Object.fromEntries(requestUrl.searchParams.entries()));
+    
+    // URLフラグメント（ハッシュ）がある場合も確認
+    if (requestUrl.hash) {
+      console.log("URL Fragment (hash):", requestUrl.hash);
+    }
+    
     console.log("=== End Debug ===");
 
     if (oauthError) {

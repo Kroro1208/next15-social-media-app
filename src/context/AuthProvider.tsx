@@ -23,12 +23,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       try {
-        // httpOnly Cookie対応: Supabaseセッションから直接確認
+        console.log('Initializing auth...');
+        
+        // URLフラグメントからセッションを取得する場合
+        if (typeof window !== 'undefined' && window.location.hash) {
+          console.log('URL has hash, attempting to get session from URL');
+          const { data, error } = await supabase.auth.getSession();
+          console.log('getSession result:', { data, error });
+        }
+        
+        // 通常のセッション取得
         supabase.auth
           .getSession()
           .then(({ data: { session }, error }) => {
+            console.log('Session check result:', { session: session?.user?.email, error });
             if (error && !error.message.includes("Refresh Token Not Found")) {
               console.error("Error getting session:", error);
               setUser(null);
