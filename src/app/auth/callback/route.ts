@@ -32,8 +32,14 @@ export async function GET(request: NextRequest) {
 
     if (!code) {
       console.log("No code found in callback");
+      console.log("Available URL params:", Array.from(requestUrl.searchParams.entries()));
+      console.log("URL hash:", requestUrl.hash);
+      console.log("URL pathname:", requestUrl.pathname);
+      
+      // 全パラメータをエラーメッセージに含める
+      const allParams = Object.fromEntries(requestUrl.searchParams.entries());
       return NextResponse.redirect(
-        `${requestUrl.origin}/auth/login?error=no_code`,
+        `${requestUrl.origin}/auth/login?error=no_code&debug=${encodeURIComponent(JSON.stringify(allParams))}`,
       );
     }
 
