@@ -10,12 +10,17 @@ export async function GET(request: NextRequest) {
 
     console.log("=== OAuth Callback Debug ===");
     console.log("Full callback URL:", request.url);
+    console.log("Request method:", request.method);
+    console.log("Request headers:", Object.fromEntries(request.headers.entries()));
     console.log(
       "All URL parameters:",
       Object.fromEntries(requestUrl.searchParams.entries()),
     );
     console.log("Code param:", code);
     console.log("Error param:", oauthError);
+    console.log("Error description:", error_description);
+    console.log("Origin:", requestUrl.origin);
+    console.log("Pathname:", requestUrl.pathname);
     console.log("=== End Debug ===");
 
     if (oauthError) {

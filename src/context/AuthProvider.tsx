@@ -146,6 +146,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("=== Google OAuth Debug ===");
       console.log("Current URL:", window.location.href);
       console.log("Origin:", window.location.origin);
+      console.log("Environment:", process.env.NODE_ENV);
+      console.log("Supabase URL:", process.env["NEXT_PUBLIC_SUPABASE_URL"]);
+      console.log("Supabase Key exists:", !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]);
       console.log(
         "Redirect URL will be:",
         `${window.location.origin}/auth/callback`,
@@ -182,15 +185,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("OAuth redirect initiated successfully");
         console.log("Data:", data);
 
-        // 一時的にリダイレクトを止めてURLを確認
+        // 本番環境でのリダイレクト
         if (data?.url) {
-          const shouldProceed = confirm(
-            `OAuth URL: ${data.url}\n\nこのURLで認証を続行しますか？`,
-          );
-          if (shouldProceed) {
-            window.location.href = data.url;
-          }
-          return; // 自動リダイレクトを防ぐ
+          console.log("Redirecting to OAuth URL:", data.url);
+          window.location.href = data.url;
+          return;
         }
       }
     } catch (error) {
