@@ -75,15 +75,16 @@ export async function GET(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
-        flowType: "pkce",
+        flowType: "implicit",
         autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true, // コールバックでURLセッション検出を有効化
+        persistSession: false, // サーバーサイドでは無効
+        detectSessionInUrl: false,
         debug: true,
       },
     });
 
-    console.log("Attempting to exchange code for session");
+    console.log("Attempting to exchange code for session manually");
+    // URLフラグメントからセッション情報を手動で取得
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
