@@ -31,15 +31,27 @@ export async function GET(request: NextRequest) {
     }
 
     if (!code) {
-      console.log("No code found in callback");
-      console.log("Available URL params:", Array.from(requestUrl.searchParams.entries()));
-      console.log("URL hash:", requestUrl.hash);
-      console.log("URL pathname:", requestUrl.pathname);
+      console.error("=== NO CODE ERROR DEBUG ===");
+      console.error("Request URL:", request.url);
+      console.error("Request method:", request.method);
+      console.error("Request headers:", JSON.stringify(Object.fromEntries(request.headers.entries()), null, 2));
+      console.error("URL search params:", Array.from(requestUrl.searchParams.entries()));
+      console.error("URL hash:", requestUrl.hash);
+      console.error("URL pathname:", requestUrl.pathname);
+      console.error("URL origin:", requestUrl.origin);
+      console.error("Full requestUrl object:", {
+        href: requestUrl.href,
+        origin: requestUrl.origin,
+        pathname: requestUrl.pathname,
+        search: requestUrl.search,
+        hash: requestUrl.hash
+      });
+      console.error("=== END NO CODE ERROR DEBUG ===");
       
       // 全パラメータをエラーメッセージに含める
       const allParams = Object.fromEntries(requestUrl.searchParams.entries());
       return NextResponse.redirect(
-        `${requestUrl.origin}/auth/login?error=no_code&debug=${encodeURIComponent(JSON.stringify(allParams))}`,
+        `${requestUrl.origin}/auth/login?error=no_code&debug=${encodeURIComponent(JSON.stringify(allParams))}&url=${encodeURIComponent(request.url)}`,
       );
     }
 
