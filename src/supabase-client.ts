@@ -32,7 +32,7 @@ export const supabase = createClient(finalURL, finalKey, {
     persistSession: true,
     detectSessionInUrl: false,
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
-    debug: process.env.NODE_ENV === "development",
+    debug: true,
   },
 });
 
