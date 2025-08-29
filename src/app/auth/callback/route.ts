@@ -58,7 +58,8 @@ export async function GET(request: NextRequest) {
         flowType: "pkce",
         autoRefreshToken: true,
         persistSession: true,
-        detectSessionInUrl: false,
+        detectSessionInUrl: true, // コールバックでURLセッション検出を有効化
+        debug: true,
       },
     });
 

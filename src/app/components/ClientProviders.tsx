@@ -1,12 +1,12 @@
 "use client";
 
-import { AuthProvider } from "../../context/AuthProvider";
-import { LanguageProvider } from "../../context/LanguageProvider";
-import { ThemeProvider } from "../../context/ThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider as JotaiProvider } from "jotai";
 import { ReactNode, useState } from "react";
 import { ToastContainer } from "react-toastify";
+import { AuthProvider } from "../../context/AuthProvider";
+import { LanguageProvider } from "../../context/LanguageProvider";
+import { ThemeProvider } from "../../context/ThemeProvider";
 
 interface ClientProvidersProps {
   children: ReactNode;
@@ -29,7 +29,7 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
             networkMode: "offlineFirst",
           },
         },
-      }),
+      })
   );
 
   return (
