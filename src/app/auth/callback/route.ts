@@ -2,11 +2,19 @@ import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  console.log("🚨 CALLBACK ROUTE HIT - START");
+  console.log("🚨 Request URL:", request.url);
+  
   try {
     const requestUrl = new URL(request.url);
     const code = requestUrl.searchParams.get("code");
     const oauthError = requestUrl.searchParams.get("error");
     const error_description = requestUrl.searchParams.get("error_description");
+    
+    console.log("🚨 Parsed parameters:");
+    console.log("🚨 - code:", code);
+    console.log("🚨 - oauthError:", oauthError);
+    console.log("🚨 - error_description:", error_description);
 
     console.log("=== OAuth Callback Debug ===");
     console.log("Full callback URL:", request.url);
