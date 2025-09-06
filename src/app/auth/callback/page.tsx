@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import { supabase } from "@/supabase-client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -10,11 +10,11 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log("Client-side auth callback processing");
-        
-        // クライアントサイドでセッション処理
-        const { data, error } = await supabase.auth.getSession();
-        
+        // URLから認証コードを取得して処理
+        const { data, error } = await supabase.auth.exchangeCodeForSession(
+          window.location.href
+        );
+
         if (error) {
           console.error("Auth callback error:", error);
           router.push("/auth/login?error=auth_failed");
@@ -22,10 +22,8 @@ export default function AuthCallback() {
         }
 
         if (data.session) {
-          console.log("Session established:", data.session.user?.email);
           router.push("/");
         } else {
-          console.log("No session found");
           router.push("/auth/login?error=no_session");
         }
       } catch (error) {
