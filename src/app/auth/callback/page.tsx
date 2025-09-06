@@ -10,13 +10,9 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // URLから認証コードを取得して処理
-        const { data, error } = await supabase.auth.exchangeCodeForSession(
-          window.location.href
-        );
-
+        const { data, error } = await supabase.auth.getSession();
+        
         if (error) {
-          console.error("Auth callback error:", error);
           router.push("/auth/login?error=auth_failed");
           return;
         }
@@ -27,7 +23,6 @@ export default function AuthCallback() {
           router.push("/auth/login?error=no_session");
         }
       } catch (error) {
-        console.error("Callback processing error:", error);
         router.push("/auth/login?error=callback_failed");
       }
     };
