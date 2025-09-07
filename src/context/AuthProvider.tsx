@@ -26,6 +26,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const initializeAuth = async () => {
       try {
         console.log("Initializing auth...");
+        console.log("Current pathname:", window.location.pathname);
+
+        // コールバックページでは認証処理を完全にスキップ
+        if (window.location.pathname.includes("/auth/callback")) {
+          console.log("In callback page, skipping all auth initialization");
+          setLoading(false);
+          return;
+        }
 
         // URLフラグメントからセッションを取得する場合
         if (
@@ -158,15 +166,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "Supabase Key exists:",
         !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
       );
-      console.log(
-        "Redirect URL will be:",
-        `${window.location.origin}/auth/callback`,
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+      console.log("Redirect URL will be:", redirectUrl);
+
+      // Supabaseダッシュボードの設定を確認するため、アラートでも表示
+      alert(
+        `Redirect URL: ${redirectUrl}\nこのURLがSupabaseダッシュボードの「Redirect URLs」に追加されていることを確認してください。`,
       );
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: redirectUrl,
           queryParams: {
             access_type: "offline",
             prompt: "consent",
