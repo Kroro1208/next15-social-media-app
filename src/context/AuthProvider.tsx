@@ -148,7 +148,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Origin:", window.location.origin);
       console.log("Environment:", process.env.NODE_ENV);
       console.log("Supabase URL:", process.env["NEXT_PUBLIC_SUPABASE_URL"]);
-      console.log("Supabase Key exists:", !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]);
+      console.log(
+        "Supabase Key exists:",
+        !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
+      );
       console.log(
         "Redirect URL will be:",
         `${window.location.origin}/auth/callback`,
@@ -159,9 +162,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
           queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          }
+            access_type: "offline",
+            prompt: "consent",
+          },
         },
       });
 

@@ -29,7 +29,7 @@ export default function ClientProviders({ children }: ClientProvidersProps) {
             networkMode: "offlineFirst",
           },
         },
-      })
+      }),
   );
 
   return (
