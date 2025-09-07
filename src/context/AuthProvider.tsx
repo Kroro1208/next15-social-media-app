@@ -28,8 +28,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Initializing auth...");
 
         // URLフラグメントからセッションを取得する場合
-        if (typeof window !== "undefined" && window.location.hash) {
-          console.log("URL has hash, attempting to get session from URL");
+        if (
+          typeof window !== "undefined" &&
+          window.location.hash &&
+          !window.location.pathname.includes("/auth/callback")
+        ) {
+          console.log(
+            "URL has hash (not in callback), attempting to get session from URL",
+          );
           const { data, error } = await supabase.auth.getSession();
           console.log("getSession result:", { data, error });
         }
