@@ -169,11 +169,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const redirectUrl = `${window.location.origin}/auth/callback`;
       console.log("Redirect URL will be:", redirectUrl);
 
-      // Supabaseダッシュボードの設定を確認するため、アラートでも表示
-      alert(
-        `Redirect URL: ${redirectUrl}\nこのURLがSupabaseダッシュボードの「Redirect URLs」に追加されていることを確認してください。`,
-      );
-
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -185,7 +180,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         },
       });
 
-      console.log("OAuth result:", { data, error });
+      // OAuth呼び出し結果を詳細にログ出力
+      console.log("=== OAuth結果の詳細 ===");
+      console.log("Data:", JSON.stringify(data, null, 2));
+      console.log("Error:", JSON.stringify(error, null, 2));
+      console.log("Data.url exists:", !!data?.url);
+
+      if (error) {
+        alert(
+          `OAuth Error: ${error.message}\nCode: ${error.name || "unknown"}`,
+        );
+        return;
+      }
+
+      if (!data?.url) {
+        alert("OAuth URL not generated - check Supabase configuration");
+        return;
+      }
+
+      console.log("About to redirect to:", data.url);
 
       if (data?.url) {
         console.log("Supabase OAuth URL:", data.url);
