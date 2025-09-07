@@ -7,6 +7,13 @@ import { useEffect } from "react";
 export default function AuthCallback() {
   const router = useRouter();
 
+  // ページレンダリング時にもアラートを表示
+  if (typeof window !== "undefined") {
+    console.log("CALLBACK PAGE RENDERING");
+    // アラートも確実に表示
+    setTimeout(() => alert("CALLBACK PAGE RENDERING"), 100);
+  }
+
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
