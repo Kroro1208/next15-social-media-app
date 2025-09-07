@@ -10,29 +10,46 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        // URLからパラメータを直接取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get("code");
+
+        if (code) {
+          const { data, error } =
+            await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            console.error("Auth error:", error);
+            router.push(
+              "/auth/login?error=" + encodeURIComponent(error.message),
+            );
+            return;
+          }
+
+          if (data.session) {
+            router.push("/");
+            return;
+          }
+        }
+
         const {
           data: { session },
           error,
         } = await supabase.auth.getSession();
 
         if (error) {
-          router.push("/auth/login");
+          console.error("Session error:", error);
+          router.push("/auth/login?error=" + encodeURIComponent(error.message));
           return;
         }
 
         if (session) {
           router.push("/");
         } else {
-          setTimeout(async () => {
-            const { data: retryData } = await supabase.auth.getSession();
-            if (retryData.session) {
-              router.push("/");
-            } else {
-              router.push("/auth/login");
-            }
-          }, 1000);
+          router.push("/auth/login");
         }
       } catch (error) {
+        console.error("Unexpected error:", error);
         router.push("/auth/login");
       }
     };
