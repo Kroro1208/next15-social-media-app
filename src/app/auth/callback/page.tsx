@@ -10,47 +10,66 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        // URLからパラメータを直接取得
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get("code");
+        console.log("Current URL:", window.location.href);
+        console.log("Search params:", window.location.search);
+        console.log("Hash:", window.location.hash);
 
-        if (code) {
-          const { data, error } =
-            await supabase.auth.exchangeCodeForSession(code);
-
-          if (error) {
-            console.error("Auth error:", error);
-            router.push(
-              "/auth/login?error=" + encodeURIComponent(error.message),
-            );
-            return;
-          }
-
-          if (data.session) {
-            router.push("/");
-            return;
-          }
-        }
-
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
+        // まずURLから直接認証を処理
+        const { error } = await supabase.auth.getSession();
 
         if (error) {
-          console.error("Session error:", error);
+          console.error("Auth error:", error);
           router.push("/auth/login?error=" + encodeURIComponent(error.message));
           return;
         }
 
-        if (session) {
-          router.push("/");
-        } else {
-          router.push("/auth/login");
-        }
+        // 認証状態の変更を監視
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange(async (event, session) => {
+          console.log("Auth state changed:", event, session);
+
+          if (event === "SIGNED_IN" && session) {
+            console.log("User signed in, redirecting to home");
+            subscription.unsubscribe();
+            router.push("/");
+            return;
+          }
+
+          if (event === "SIGNED_OUT") {
+            console.log("User signed out, redirecting to login");
+            subscription.unsubscribe();
+            router.push("/auth/login");
+            return;
+          }
+        });
+
+        // 一定時間後にタイムアウト
+        setTimeout(() => {
+          console.log("Auth timeout, checking session one more time");
+          supabase.auth.getSession().then(({ data, error }) => {
+            subscription.unsubscribe();
+
+            if (error) {
+              console.error("Final session check error:", error);
+              router.push(
+                "/auth/login?error=" + encodeURIComponent(error.message),
+              );
+              return;
+            }
+
+            if (data?.session) {
+              console.log("Session found in final check");
+              router.push("/");
+            } else {
+              console.log("No session in final check");
+              router.push("/auth/login?error=timeout");
+            }
+          });
+        }, 5000);
       } catch (error) {
         console.error("Unexpected error:", error);
-        router.push("/auth/login");
+        router.push("/auth/login?error=unexpected_error");
       }
     };
 
