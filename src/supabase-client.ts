@@ -29,9 +29,10 @@ export const supabase = createClient(finalURL, finalKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    detectSessionInUrl: true,
+    flowType: "pkce",
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
-    debug: false,
+    debug: true,
   },
 });
 
