@@ -10,20 +10,30 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        const { data, error } = await supabase.auth.getSession();
-        
+        const {
+          data: { session },
+          error,
+        } = await supabase.auth.getSession();
+
         if (error) {
-          router.push("/auth/login?error=auth_failed");
+          router.push("/auth/login");
           return;
         }
 
-        if (data.session) {
+        if (session) {
           router.push("/");
         } else {
-          router.push("/auth/login?error=no_session");
+          setTimeout(async () => {
+            const { data: retryData } = await supabase.auth.getSession();
+            if (retryData.session) {
+              router.push("/");
+            } else {
+              router.push("/auth/login");
+            }
+          }, 1000);
         }
       } catch (error) {
-        router.push("/auth/login?error=callback_failed");
+        router.push("/auth/login");
       }
     };
 
