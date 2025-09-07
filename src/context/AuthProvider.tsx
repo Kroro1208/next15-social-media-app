@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("Error setting cookies:", error);
         }
       } else if (event === "SIGNED_OUT") {
@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           await fetch("/api/auth/clear-cookies", {
             method: "POST",
           });
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("Error clearing cookies:", error);
         }
       } else if (event === "TOKEN_REFRESHED" && session) {
@@ -144,7 +144,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
           }
-        } catch (error) {
+        } catch (error: unknown) {
           console.error("Error updating cookies:", error);
         }
       }
@@ -187,9 +187,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Data.url exists:", !!data?.url);
 
       if (error) {
-        alert(
-          `OAuth Error: ${error.message}\nCode: ${error.name || "unknown"}`,
-        );
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        const errorName = error instanceof Error ? error.name : 'unknown';
+        alert(`OAuth Error: ${errorMessage}\nCode: ${errorName}`);
         return;
       }
 
@@ -217,7 +217,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) {
         console.error("Google sign in error:", error);
-        alert(`認証エラー: ${error.message}`);
+        const errorMessage = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
+        alert(`認証エラー: ${errorMessage}`);
       } else {
         console.log("OAuth redirect initiated successfully");
         console.log("Data:", data);
@@ -229,7 +230,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return;
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Sign in error:", error);
       alert(
         `エラー: ${error instanceof Error ? error.message : "Unknown error"}`,
@@ -249,7 +250,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return { error: error.message };
         }
         return {};
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Sign in error:", error);
         return { error: "サインインエラーが発生しました" };
       }
@@ -272,7 +273,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           return { error: error.message };
         }
         return {};
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Sign up error:", error);
         return { error: "サインアップエラーが発生しました" };
       }
@@ -286,7 +287,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) {
         console.error("Sign out error:", error);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Sign out error:", error);
     }
   }, []);
