@@ -10,6 +10,8 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        alert("AUTH CALLBACK PAGE LOADED"); // 強制的にアラート表示
+        console.log("=== CALLBACK PAGE EXECUTING ===");
         console.log("Current URL:", window.location.href);
         console.log("Search params:", window.location.search);
         console.log("Hash:", window.location.hash);
