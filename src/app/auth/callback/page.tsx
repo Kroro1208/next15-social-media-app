@@ -14,7 +14,64 @@ export default function AuthCallback() {
         console.log("Search params:", window.location.search);
         console.log("Hash:", window.location.hash);
 
-        // まずURLから直接認証を処理
+        // URLハッシュからトークンを手動で抽出
+        const hashParams = new URLSearchParams(
+          window.location.hash.substring(1),
+        );
+        const accessToken = hashParams.get("access_token");
+        const refreshToken = hashParams.get("refresh_token");
+
+        // URLクエリパラメータからも確認
+        const searchParams = new URLSearchParams(window.location.search);
+        const code = searchParams.get("code");
+
+        console.log("Found tokens:", {
+          accessToken: !!accessToken,
+          refreshToken: !!refreshToken,
+          code: !!code,
+        });
+
+        if (accessToken && refreshToken) {
+          // トークンベースの認証
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+
+          if (error) {
+            console.error("Token auth error:", error);
+            router.push(
+              "/auth/login?error=" + encodeURIComponent(error.message),
+            );
+            return;
+          }
+
+          if (data?.session) {
+            console.log("Session created from tokens, redirecting to home");
+            router.push("/");
+            return;
+          }
+        } else if (code) {
+          // PKCEコードベースの認証
+          const { data, error } =
+            await supabase.auth.exchangeCodeForSession(code);
+
+          if (error) {
+            console.error("Code exchange error:", error);
+            router.push(
+              "/auth/login?error=" + encodeURIComponent(error.message),
+            );
+            return;
+          }
+
+          if (data?.session) {
+            console.log("Session created from code, redirecting to home");
+            router.push("/");
+            return;
+          }
+        }
+
+        // 既存のセッションをチェック
         const { error } = await supabase.auth.getSession();
 
         if (error) {
