@@ -30,7 +30,7 @@ export const supabase = createClient(finalURL, finalKey, {
     flowType: "pkce",
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false,
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     debug: true,
   },

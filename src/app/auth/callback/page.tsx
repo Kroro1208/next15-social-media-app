@@ -20,16 +20,38 @@ export default function AuthCallback() {
         );
         const accessToken = hashParams.get("access_token");
         const refreshToken = hashParams.get("refresh_token");
+        const hashError = hashParams.get("error");
+        const hashErrorDescription = hashParams.get("error_description");
 
         // URLクエリパラメータからも確認
         const searchParams = new URLSearchParams(window.location.search);
         const code = searchParams.get("code");
+        const searchError = searchParams.get("error");
+        const searchErrorDescription = searchParams.get("error_description");
 
         console.log("Found tokens:", {
           accessToken: !!accessToken,
           refreshToken: !!refreshToken,
           code: !!code,
+          hashError,
+          hashErrorDescription,
+          searchError,
+          searchErrorDescription,
         });
+
+        // エラーがある場合は処理
+        if (hashError || searchError) {
+          const errorMsg =
+            hashErrorDescription ||
+            searchErrorDescription ||
+            hashError ||
+            searchError;
+          console.error("Auth redirect error:", errorMsg);
+          router.push(
+            "/auth/login?error=" + encodeURIComponent(errorMsg as string),
+          );
+          return;
+        }
 
         if (accessToken && refreshToken) {
           // トークンベースの認証
