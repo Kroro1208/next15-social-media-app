@@ -187,8 +187,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log("Data.url exists:", !!data?.url);
 
       if (error) {
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        const errorName = error instanceof Error ? error.name : 'unknown';
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+        const errorName = error instanceof Error ? error.name : "unknown";
         alert(`OAuth Error: ${errorMessage}\nCode: ${errorName}`);
         return;
       }
@@ -217,7 +218,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) {
         console.error("Google sign in error:", error);
-        const errorMessage = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
+        const errorMessage =
+          error && typeof error === "object" && "message" in error
+            ? (error as Error).message
+            : String(error);
         alert(`認証エラー: ${errorMessage}`);
       } else {
         console.log("OAuth redirect initiated successfully");
