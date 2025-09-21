@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
@@ -11,8 +11,13 @@ export async function GET(request: Request) {
     console.log("Full URL:", request.url);
 
     if (!code) {
-      console.log("No code found, redirecting to login");
-      return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
+      console.log(
+        "No code found in query. Redirecting to client-side callback to handle fragment/hash if present",
+      );
+      // If there's no `code` in the query params, it may be that the provider returned
+      // tokens in the URL fragment (implicit flow). Redirect to a client-side handler
+      // that can read window.location.hash and let the Supabase client recover the session.
+      return NextResponse.redirect(`${origin}/auth/callback-client`);
     }
 
     const supabase = createClient(
