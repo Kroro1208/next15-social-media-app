@@ -28,12 +28,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Initializing auth...");
         console.log("Current pathname:", window.location.pathname);
 
-        // コールバックページでは認証処理を完全にスキップ
-        if (window.location.pathname.includes("/auth/callback")) {
-          console.log("In callback page, skipping all auth initialization");
-          setLoading(false);
-          return;
-        }
+        // Allow initialization even on the callback page so the client can
+        // detect session from URL fragments or PKCE code exchange.
 
         // URLフラグメントからセッションを取得する場合
         if (

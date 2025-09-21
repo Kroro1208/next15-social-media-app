@@ -12,12 +12,34 @@ export async function GET(request: Request) {
 
     if (!code) {
       console.log(
-        "No code found in query. Redirecting to client-side callback to handle fragment/hash if present",
+        "No code found in query. Returning HTML that preserves hash when forwarding to client callback",
       );
-      // If there's no `code` in the query params, it may be that the provider returned
-      // tokens in the URL fragment (implicit flow). Redirect to a client-side handler
-      // that can read window.location.hash and let the Supabase client recover the session.
-      return NextResponse.redirect(`${origin}/auth/callback-client`);
+      const html = `<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Auth callback</title>
+  </head>
+  <body>
+    <script>
+      (function(){
+        try {
+          const hash = window.location.hash || '';
+          const search = window.location.search || '';
+          const target = '/auth/callback-client' + (hash || search);
+          window.location.replace(target);
+        } catch (e) {
+          window.location.replace('/auth/login?error=no_code');
+        }
+      })();
+    </script>
+  </body>
+</html>`;
+
+      return new NextResponse(html, {
+        headers: { "Content-Type": "text/html" },
+      });
     }
 
     const supabase = createClient(
