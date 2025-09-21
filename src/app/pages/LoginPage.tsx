@@ -187,7 +187,7 @@ export default function LoginPage() {
         <Button
           onClick={handleGoogleAuth}
           disabled={loading}
-          className="w-full mb-4 bg-red-600 hover:bg-red-700 text-white flex items-center justify-center gap-2"
+          className="w-full mb-4 bg-green-600 hover:bg-green-700 text-white flex items-center justify-center gap-2"
         >
           <FaGoogle />
           {isLogin ? t("auth.google.login") : t("auth.google.signup")}
