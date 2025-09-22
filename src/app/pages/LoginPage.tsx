@@ -120,14 +120,26 @@ export default function LoginPage() {
   };
 
   const handleGoogleAuth = async () => {
+    console.log("=== Googleログインボタンクリック ===");
+    console.log("Current URL:", window.location.href);
+    console.log("User Agent:", navigator.userAgent);
+
     setLoading(true);
     try {
+      console.log("signInWithGoogle実行開始");
       await signInWithGoogle();
+      console.log("signInWithGoogle実行完了");
     } catch (error) {
       console.error("Google auth error:", error);
+      console.error("Error details:", {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        name: error instanceof Error ? error.name : undefined,
+      });
       setError("Google認証でエラーが発生しました");
     } finally {
       setLoading(false);
+      console.log("handleGoogleAuth処理完了");
     }
   };
 

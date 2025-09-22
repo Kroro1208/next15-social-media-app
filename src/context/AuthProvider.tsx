@@ -183,6 +183,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             access_type: "offline",
             prompt: "consent",
           },
+          // PKCE (Proof Key for Code Exchange) を有効化
+          skipBrowserRedirect: false,
         },
       });
 

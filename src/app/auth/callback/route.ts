@@ -32,12 +32,16 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
     }
 
+    // Supabaseクライアント作成
     const supabase = createClient(
       process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
       process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
     );
 
     console.log("Attempting to exchange code for session");
+    console.log("Code length:", code.length);
+    console.log("Code preview:", code.substring(0, 20) + "...");
+
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (error) {
