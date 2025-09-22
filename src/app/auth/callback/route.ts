@@ -5,41 +5,31 @@ export async function GET(request: Request) {
   try {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
+    const oauthError = searchParams.get("error");
+    const errorDescription = searchParams.get("error_description");
 
     console.log("=== Callback route executed ===");
-    console.log("Code exists:", !!code);
     console.log("Full URL:", request.url);
+    console.log("Origin:", origin);
+    console.log("Code exists:", !!code);
+    console.log("Error param:", oauthError);
+    console.log("Error description:", errorDescription);
+    console.log(
+      "All search params:",
+      Object.fromEntries(searchParams.entries()),
+    );
+
+    // OAuth エラーパラメータが含まれている場合
+    if (oauthError) {
+      console.log("OAuth error detected:", oauthError, errorDescription);
+      return NextResponse.redirect(
+        `${origin}/auth/login?error=${encodeURIComponent(oauthError)}&description=${encodeURIComponent(errorDescription || "")}`,
+      );
+    }
 
     if (!code) {
-      console.log(
-        "No code found in query. Returning HTML that preserves hash when forwarding to client callback",
-      );
-      const html = `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Auth callback</title>
-  </head>
-  <body>
-    <script>
-      (function(){
-        try {
-          const hash = window.location.hash || '';
-          const search = window.location.search || '';
-          const target = '/auth/callback-client' + (hash || search);
-          window.location.replace(target);
-        } catch (e) {
-          window.location.replace('/auth/login?error=no_code');
-        }
-      })();
-    </script>
-  </body>
-</html>`;
-
-      return new NextResponse(html, {
-        headers: { "Content-Type": "text/html" },
-      });
+      console.log("No code found, redirecting to login");
+      return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
     }
 
     const supabase = createClient(

@@ -162,7 +162,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         "Supabase Key exists:",
         !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
       );
-      const redirectUrl = `${window.location.origin}/auth/callback`;
+      // 本番環境では VERCEL_URL から正しいドメインを取得
+      const getRedirectUrl = () => {
+        if (typeof window !== "undefined") {
+          // ブラウザ環境
+          return `${window.location.origin}/auth/callback`;
+        }
+        // サーバー環境（フォールバック）
+        return `${process.env["NEXT_PUBLIC_SITE_URL"] || "https://social-media-app-jade-three.vercel.app"}/auth/callback`;
+      };
+
+      const redirectUrl = getRedirectUrl();
       console.log("Redirect URL will be:", redirectUrl);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
