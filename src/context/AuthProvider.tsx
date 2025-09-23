@@ -153,29 +153,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = useCallback(async () => {
     try {
-      console.log("=== Google OAuth Debug ===");
-      console.log("Current URL:", window.location.href);
-      console.log("Origin:", window.location.origin);
-      console.log("Environment:", process.env.NODE_ENV);
-      console.log("Supabase URL:", process.env["NEXT_PUBLIC_SUPABASE_URL"]);
-      console.log(
-        "Supabase Key exists:",
-        !!process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"],
-      );
-      // 本番環境では VERCEL_URL から正しいドメインを取得
-      const getRedirectUrl = () => {
-        if (typeof window !== "undefined") {
-          // ブラウザ環境
-          return `${window.location.origin}/auth/callback`;
-        }
-        // サーバー環境（フォールバック）
-        return `${process.env["NEXT_PUBLIC_SITE_URL"] || "https://social-media-app-jade-three.vercel.app"}/auth/callback`;
-      };
+      const redirectUrl = `${window.location.origin}/auth/callback`;
 
-      const redirectUrl = getRedirectUrl();
-      console.log("Redirect URL will be:", redirectUrl);
-
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: redirectUrl,
@@ -183,70 +163,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             access_type: "offline",
             prompt: "consent",
           },
-          // PKCE (Proof Key for Code Exchange) を有効化
-          skipBrowserRedirect: false,
         },
       });
 
-      // OAuth呼び出し結果を詳細にログ出力
-      console.log("=== OAuth結果の詳細 ===");
-      console.log("Data:", JSON.stringify(data, null, 2));
-      console.log("Error:", JSON.stringify(error, null, 2));
-      console.log("Data.url exists:", !!data?.url);
-
-      if (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
-        const errorName = error instanceof Error ? error.name : "unknown";
-        alert(`OAuth Error: ${errorMessage}\nCode: ${errorName}`);
-        return;
-      }
-
-      if (!data?.url) {
-        alert("OAuth URL not generated - check Supabase configuration");
-        return;
-      }
-
-      console.log("About to redirect to:", data.url);
-
-      if (data?.url) {
-        console.log("Supabase OAuth URL:", data.url);
-        // OAuth URLを解析して設定を確認
-        try {
-          const oauthUrl = new URL(data.url);
-          console.log("OAuth URL host:", oauthUrl.host);
-          console.log(
-            "OAuth URL search params:",
-            Object.fromEntries(oauthUrl.searchParams.entries()),
-          );
-        } catch (e) {
-          console.log("Failed to parse OAuth URL:", e);
-        }
-      }
-
       if (error) {
         console.error("Google sign in error:", error);
-        const errorMessage =
-          error && typeof error === "object" && "message" in error
-            ? (error as Error).message
-            : String(error);
-        alert(`認証エラー: ${errorMessage}`);
-      } else {
-        console.log("OAuth redirect initiated successfully");
-        console.log("Data:", data);
-
-        // 本番環境でのリダイレクト
-        if (data?.url) {
-          console.log("Redirecting to OAuth URL:", data.url);
-          window.location.href = data.url;
-          return;
-        }
+        throw error;
       }
-    } catch (error: unknown) {
-      console.error("Sign in error:", error);
-      alert(
-        `エラー: ${error instanceof Error ? error.message : "Unknown error"}`,
-      );
+    } catch (error) {
+      console.error("Google sign in error:", error);
+      throw error;
     }
   }, []);
 

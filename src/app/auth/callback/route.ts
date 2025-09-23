@@ -3,65 +3,49 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
+    const supabaseUrl = process.env["SUPABASE_URL"]!;
+    const supabaseAnonKey = process.env["SUPABASE_ANON_KEY"]!;
+
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
-    const oauthError = searchParams.get("error");
-    const errorDescription = searchParams.get("error_description");
+    const error = searchParams.get("error");
 
-    console.log("=== Callback route executed ===");
-    console.log("Full URL:", request.url);
-    console.log("Origin:", origin);
-    console.log("Code exists:", !!code);
-    console.log("Error param:", oauthError);
-    console.log("Error description:", errorDescription);
-    console.log(
-      "All search params:",
-      Object.fromEntries(searchParams.entries()),
-    );
-
-    // OAuth エラーパラメータが含まれている場合
-    if (oauthError) {
-      console.log("OAuth error detected:", oauthError, errorDescription);
-      return NextResponse.redirect(
-        `${origin}/auth/login?error=${encodeURIComponent(oauthError)}&description=${encodeURIComponent(errorDescription || "")}`,
-      );
+    // OAuth エラーがある場合
+    if (error) {
+      console.log(`OAuth error: ${error}`);
+      return NextResponse.redirect(`${origin}/auth/login?error=${error}`);
     }
 
+    // code パラメータがない場合
     if (!code) {
-      console.log("No code found, redirecting to login");
+      console.log("No code parameter received");
       return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
     }
 
-    // Supabaseクライアント作成
-    const supabase = createClient(
-      process.env["NEXT_PUBLIC_SUPABASE_URL"]!,
-      process.env["NEXT_PUBLIC_SUPABASE_ANON_KEY"]!,
-    );
+    // Supabase クライアント作成
+    const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    console.log("Attempting to exchange code for session");
-    console.log("Code length:", code.length);
-    console.log("Code preview:", code.substring(0, 20) + "...");
+    // 認証コード交換
+    const { data, error: exchangeError } =
+      await supabase.auth.exchangeCodeForSession(code);
 
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-
-    if (error) {
-      console.error("Error exchanging code:", error);
+    if (exchangeError) {
+      console.error("Code exchange failed:", exchangeError);
       return NextResponse.redirect(
-        `${origin}/auth/login?error=${encodeURIComponent(error.message)}`,
+        `${origin}/auth/login?error=exchange_failed`,
       );
     }
 
-    if (data?.session) {
-      console.log("Session created successfully, redirecting to home");
-      return NextResponse.redirect(`${origin}/`);
+    if (!data.session) {
+      console.error("No session received after code exchange");
+      return NextResponse.redirect(`${origin}/auth/login?error=no_session`);
     }
 
-    console.log("No session created, redirecting to login");
-    return NextResponse.redirect(`${origin}/auth/login?error=no_session`);
+    console.log("Authentication successful");
+    return NextResponse.redirect(`${origin}/dashboard`);
   } catch (error) {
-    console.error("Unexpected error in callback:", error);
-    return NextResponse.redirect(
-      `${new URL(request.url).origin}/auth/login?error=server_error`,
-    );
+    console.error("Auth callback error:", error);
+    const { origin } = new URL(request.url);
+    return NextResponse.redirect(`${origin}/auth/login?error=callback_failed`);
   }
 }
