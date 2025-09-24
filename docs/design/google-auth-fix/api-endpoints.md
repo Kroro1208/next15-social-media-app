@@ -18,18 +18,20 @@ Google OAuth認証修復のためのAPIエンドポイント設計。Next.js App
 Google OAuthの認証コールバックを処理し、認証コードをセッションに交換します。
 
 **パラメータ**:
+
 ```typescript
 interface CallbackQuery {
-  code?: string;                 // OAuth認証コード
-  state?: string;                // CSRF対策パラメータ
-  scope?: string;                // 認証スコープ
-  error?: string;                // OAuthエラーコード
-  error_description?: string;     // エラー詳細
-  error_uri?: string;            // エラー詳細URL
+  code?: string; // OAuth認証コード
+  state?: string; // CSRF対策パラメータ
+  scope?: string; // 認証スコープ
+  error?: string; // OAuthエラーコード
+  error_description?: string; // エラー詳細
+  error_uri?: string; // エラー詳細URL
 }
 ```
 
 **レスポンス**:
+
 ```http
 # 成功時
 HTTP/1.1 302 Found
@@ -41,37 +43,39 @@ Location: https://domain.com/auth/login?error=no_code&debug=...
 ```
 
 **実装例**:
+
 ```typescript
 // src/app/auth/callback/route.ts
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get('code');
-  const error = searchParams.get('error');
+  const code = searchParams.get("code");
+  const error = searchParams.get("error");
 
   // エラーハンドリング
   if (error) {
     return NextResponse.redirect(
-      `${origin}/auth/login?error=${encodeURIComponent(error)}`
+      `${origin}/auth/login?error=${encodeURIComponent(error)}`,
     );
   }
 
   if (!code) {
     return NextResponse.redirect(
-      `${origin}/auth/login?error=no_code&debug=${encodeURIComponent(JSON.stringify(Object.fromEntries(searchParams.entries())))}`
+      `${origin}/auth/login?error=no_code&debug=${encodeURIComponent(JSON.stringify(Object.fromEntries(searchParams.entries())))}`,
     );
   }
 
   // Supabase Auth でセッション作成
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
   );
 
-  const { data, error: authError } = await supabase.auth.exchangeCodeForSession(code);
+  const { data, error: authError } =
+    await supabase.auth.exchangeCodeForSession(code);
 
   if (authError) {
     return NextResponse.redirect(
-      `${origin}/auth/login?error=${encodeURIComponent(authError.message)}`
+      `${origin}/auth/login?error=${encodeURIComponent(authError.message)}`,
     );
   }
 
@@ -86,11 +90,13 @@ export async function GET(request: Request) {
 現在の認証状態を確認します。
 
 **ヘッダー**:
+
 ```http
 Authorization: Bearer <access_token>
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -116,6 +122,7 @@ Authorization: Bearer <access_token>
 ```
 
 **エラーレスポンス**:
+
 ```json
 {
   "success": false,
@@ -134,6 +141,7 @@ Authorization: Bearer <access_token>
 OAuth認証フローを開始します。
 
 **リクエストボディ**:
+
 ```json
 {
   "provider": "google",
@@ -145,6 +153,7 @@ OAuth認証フローを開始します。
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -163,6 +172,7 @@ OAuth認証フローを開始します。
 アクセストークンをリフレッシュします。
 
 **リクエストボディ**:
+
 ```json
 {
   "refreshToken": "refresh_token_string"
@@ -170,6 +180,7 @@ OAuth認証フローを開始します。
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -189,11 +200,13 @@ OAuth認証フローを開始します。
 現在のセッションを無効化し、ログアウトします。
 
 **ヘッダー**:
+
 ```http
 Authorization: Bearer <access_token>
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -210,6 +223,7 @@ Authorization: Bearer <access_token>
 セッションの有効性を検証します。
 
 **リクエストボディ**:
+
 ```json
 {
   "accessToken": "access_token_string"
@@ -217,6 +231,7 @@ Authorization: Bearer <access_token>
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -240,11 +255,13 @@ Authorization: Bearer <access_token>
 認証関連のログを取得します（管理者のみ）。
 
 **クエリパラメータ**:
+
 ```
 ?userId=user_id&from=2025-08-23T00:00:00Z&to=2025-08-23T23:59:59Z&level=error&limit=100
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -276,11 +293,13 @@ Authorization: Bearer <access_token>
 認証の成功率やパフォーマンスメトリクスを取得します。
 
 **クエリパラメータ**:
+
 ```
 ?timeframe=24h&granularity=1h
 ```
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -310,6 +329,7 @@ Authorization: Bearer <access_token>
 認証設定の妥当性を検証します。
 
 **レスポンス**:
+
 ```json
 {
   "success": true,
@@ -319,7 +339,10 @@ Authorization: Bearer <access_token>
       "supabaseUrl": { "status": "valid", "value": "https://xxx.supabase.co" },
       "supabaseKey": { "status": "valid", "masked": "sb-xxx...xxx" },
       "googleClientId": { "status": "valid", "masked": "123...789" },
-      "redirectUri": { "status": "valid", "value": "https://domain.com/auth/callback" },
+      "redirectUri": {
+        "status": "valid",
+        "value": "https://domain.com/auth/callback"
+      },
       "environment": { "status": "valid", "value": "production" }
     },
     "warnings": [],
@@ -354,94 +377,101 @@ Authorization: Bearer <access_token>
 
 ### HTTPステータスコード
 
-| ステータス | 説明 | 使用例 |
-|-----------|------|--------|
-| 200 | 成功 | 認証状態確認成功 |
-| 201 | 作成成功 | セッション作成成功 |
-| 302 | リダイレクト | 認証完了後のリダイレクト |
-| 400 | 不正なリクエスト | 無効なパラメータ |
-| 401 | 認証エラー | 無効なトークン |
-| 403 | 認可エラー | 権限不足 |
-| 404 | 見つからない | 無効なエンドポイント |
-| 429 | レート制限 | リクエスト制限超過 |
-| 500 | サーバーエラー | 内部エラー |
+| ステータス | 説明             | 使用例                   |
+| ---------- | ---------------- | ------------------------ |
+| 200        | 成功             | 認証状態確認成功         |
+| 201        | 作成成功         | セッション作成成功       |
+| 302        | リダイレクト     | 認証完了後のリダイレクト |
+| 400        | 不正なリクエスト | 無効なパラメータ         |
+| 401        | 認証エラー       | 無効なトークン           |
+| 403        | 認可エラー       | 権限不足                 |
+| 404        | 見つからない     | 無効なエンドポイント     |
+| 429        | レート制限       | リクエスト制限超過       |
+| 500        | サーバーエラー   | 内部エラー               |
 
 ### エラーコード一覧
 
-| コード | タイプ | 説明 |
-|--------|--------|------|
-| `NO_CODE_ERROR` | `no_code` | 認証コードが見つからない |
-| `INVALID_CODE` | `invalid_code` | 無効な認証コード |
-| `CODE_EXPIRED` | `code_expired` | 認証コード期限切れ |
-| `OAUTH_ERROR` | `oauth_error` | OAuthプロバイダエラー |
-| `SESSION_FAILED` | `session_creation_failed` | セッション作成失敗 |
-| `NETWORK_ERROR` | `network_error` | ネットワークエラー |
-| `CSRF_VIOLATION` | `csrf_violation` | CSRF攻撃検知 |
-| `INVALID_REDIRECT` | `invalid_redirect` | 不正なリダイレクト |
+| コード             | タイプ                    | 説明                     |
+| ------------------ | ------------------------- | ------------------------ |
+| `NO_CODE_ERROR`    | `no_code`                 | 認証コードが見つからない |
+| `INVALID_CODE`     | `invalid_code`            | 無効な認証コード         |
+| `CODE_EXPIRED`     | `code_expired`            | 認証コード期限切れ       |
+| `OAUTH_ERROR`      | `oauth_error`             | OAuthプロバイダエラー    |
+| `SESSION_FAILED`   | `session_creation_failed` | セッション作成失敗       |
+| `NETWORK_ERROR`    | `network_error`           | ネットワークエラー       |
+| `CSRF_VIOLATION`   | `csrf_violation`          | CSRF攻撃検知             |
+| `INVALID_REDIRECT` | `invalid_redirect`        | 不正なリダイレクト       |
 
 ## セキュリティ考慮事項
 
 ### 1. CORS設定
+
 ```javascript
 // next.config.mjs
 const nextConfig = {
   async headers() {
     return [
       {
-        source: '/api/auth/:path*',
+        source: "/api/auth/:path*",
         headers: [
           {
-            key: 'Access-Control-Allow-Origin',
-            value: process.env.ALLOWED_ORIGINS || 'https://domain.com'
+            key: "Access-Control-Allow-Origin",
+            value: process.env.ALLOWED_ORIGINS || "https://domain.com",
           },
           {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET, POST, OPTIONS'
+            key: "Access-Control-Allow-Methods",
+            value: "GET, POST, OPTIONS",
           },
           {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization'
-          }
-        ]
-      }
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, Authorization",
+          },
+        ],
+      },
     ];
-  }
+  },
 };
 ```
 
 ### 2. レート制限
+
 ```typescript
 // レート制限設定例
 const rateLimits = {
-  '/auth/callback': { requests: 10, window: '1m' },
-  '/api/auth/start': { requests: 5, window: '1m' },
-  '/api/auth/refresh': { requests: 30, window: '1h' }
+  "/auth/callback": { requests: 10, window: "1m" },
+  "/api/auth/start": { requests: 5, window: "1m" },
+  "/api/auth/refresh": { requests: 30, window: "1h" },
 };
 ```
 
 ### 3. セキュリティヘッダー
+
 ```typescript
 // セキュリティヘッダー設定
 const securityHeaders = {
-  'X-Content-Type-Options': 'nosniff',
-  'X-Frame-Options': 'DENY',
-  'X-XSS-Protection': '1; mode=block',
-  'Referrer-Policy': 'strict-origin-when-cross-origin',
-  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'"
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "1; mode=block",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Content-Security-Policy":
+    "default-src 'self'; script-src 'self' 'unsafe-inline'",
 };
 ```
 
 ## 実装優先度
 
 ### P0（緊急）
+
 1. `GET /auth/callback` - 認証コールバック修復
 2. エラーハンドリング強化
 
 ### P1（高優先度）
+
 3. `GET /api/auth/status` - 認証状態確認
 4. `GET /api/auth/config/validate` - 設定検証
 
 ### P2（中優先度）
+
 5. `GET /api/auth/logs` - ログ機能
 6. `GET /api/auth/metrics` - メトリクス機能
 

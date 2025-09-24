@@ -7,6 +7,7 @@ Google OAuth認証における理想的なデータフローと、現在発生�
 ## 現在の問題フロー分析
 
 ### 問題のあるフロー（現状）
+
 ```mermaid
 flowchart TD
     A[ユーザー] --> B[LoginPage]
@@ -24,6 +25,7 @@ flowchart TD
 ```
 
 ### 問題発生ポイント
+
 1. **Google → Callback間**: 認証コードの未送信
 2. **環境差異**: 本番環境特有の制約
 3. **エラーハンドリング**: 不十分なデバッグ情報
@@ -31,6 +33,7 @@ flowchart TD
 ## 修復後の理想フロー
 
 ### 正常認証フロー
+
 ```mermaid
 sequenceDiagram
     participant U as ユーザー
@@ -61,6 +64,7 @@ sequenceDiagram
 ```
 
 ### エラーハンドリングフロー
+
 ```mermaid
 flowchart TD
     A[Callback受信] --> B{パラメータ検証}
@@ -94,6 +98,7 @@ flowchart TD
 ## 状態管理データフロー
 
 ### 認証状態の管理
+
 ```mermaid
 stateDiagram-v2
     [*] --> Unauthenticated
@@ -126,6 +131,7 @@ stateDiagram-v2
 ## データ構造とフロー
 
 ### 認証関連データの流れ
+
 ```mermaid
 flowchart LR
     subgraph "Google OAuth Response"
@@ -177,6 +183,7 @@ flowchart LR
 ## 環境別データフロー
 
 ### ローカル環境 vs 本番環境
+
 ```mermaid
 flowchart TD
     subgraph "Local Environment"
@@ -216,6 +223,7 @@ flowchart TD
 ## リアルタイム監視データフロー
 
 ### ログとモニタリング
+
 ```mermaid
 flowchart TD
     subgraph "Application Events"
@@ -260,6 +268,7 @@ flowchart TD
 ## セキュリティデータフロー
 
 ### セキュリティ検証フロー
+
 ```mermaid
 flowchart TD
     A[認証リクエスト] --> B[CSRF Token検証]
@@ -285,6 +294,7 @@ flowchart TD
 ## パフォーマンス最適化フロー
 
 ### レスポンス時間最適化
+
 ```mermaid
 gantt
     title 認証処理タイムライン（目標vs現状）

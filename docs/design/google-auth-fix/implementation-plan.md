@@ -13,16 +13,18 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
 #### 実装項目
 
 1. **詳細ログ強化**
+
    ```typescript
    // src/app/auth/callback/route.ts での追加ログ
-   console.log('=== 緊急デバッグ情報 ===');
-   console.log('Full URL:', request.url);
-   console.log('All headers:', Object.fromEntries(request.headers.entries()));
-   console.log('Environment:', process.env.NODE_ENV);
-   console.log('Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL);
+   console.log("=== 緊急デバッグ情報 ===");
+   console.log("Full URL:", request.url);
+   console.log("All headers:", Object.fromEntries(request.headers.entries()));
+   console.log("Environment:", process.env.NODE_ENV);
+   console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
    ```
 
 2. **環境設定検証スクリプト**
+
    ```bash
    # scripts/verify-auth-config.js
    node scripts/verify-auth-config.js
@@ -34,11 +36,13 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
    - ブラウザネットワークタブの分析
 
 #### 成功基準
+
 - 問題の根本原因特定
 - 詳細なエラー情報収集
 - 回避策の特定（あれば実装）
 
 #### リスク
+
 - 本番環境での調査によるパフォーマンス影響
 - ログ出力による機密情報露出リスク
 
@@ -49,6 +53,7 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
 #### 実装項目
 
 1. **認証コールバック処理の改善**
+
    ```typescript
    // src/app/auth/callback/route.ts
    export async function GET(request: Request) {
@@ -65,7 +70,6 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
        const authResult = await processAuthentication(authParams, config);
 
        return handleAuthSuccess(authResult, origin);
-
      } catch (error) {
        return handleAuthError(error, request);
      }
@@ -73,15 +77,16 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
    ```
 
 2. **エラーハンドリング強化**
+
    ```typescript
    // src/lib/auth-error-handler.ts
    export class AuthErrorHandler {
      static handle(error: AuthError, context: AuthContext): AuthErrorResult {
        // エラータイプ別の処理
        switch (error.type) {
-         case 'no_code':
+         case "no_code":
            return this.handleNoCodeError(error, context);
-         case 'oauth_error':
+         case "oauth_error":
            return this.handleOAuthError(error, context);
          default:
            return this.handleUnknownError(error, context);
@@ -95,22 +100,25 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
    // src/config/auth.ts
    export const authConfig = {
      development: {
-       redirectUri: 'http://localhost:3000/auth/callback',
-       siteUrl: 'http://localhost:3000'
+       redirectUri: "http://localhost:3000/auth/callback",
+       siteUrl: "http://localhost:3000",
      },
      production: {
-       redirectUri: 'https://social-media-app-jade-three.vercel.app/auth/callback',
-       siteUrl: 'https://social-media-app-jade-three.vercel.app'
-     }
+       redirectUri:
+         "https://social-media-app-jade-three.vercel.app/auth/callback",
+       siteUrl: "https://social-media-app-jade-three.vercel.app",
+     },
    };
    ```
 
 #### 成功基準
+
 - Google認証の成功率 95%以上
 - エラー時の適切なメッセージ表示
 - 本番・開発環境での動作統一
 
 #### リスク
+
 - 既存ユーザーのセッション無効化
 - 認証フロー変更による他機能への影響
 
@@ -121,28 +129,33 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
 #### 実装項目
 
 1. **認証メトリクス収集**
+
    ```typescript
    // src/lib/auth-metrics.ts
    export class AuthMetrics {
      static async recordAuthAttempt(result: AuthResult): Promise<void> {
-       await this.sendMetric('auth_attempt', {
+       await this.sendMetric("auth_attempt", {
          success: result.success,
          provider: result.provider,
          errorType: result.error?.type,
-         responseTime: result.duration
+         responseTime: result.duration,
        });
      }
    }
    ```
 
 2. **アラート機能**
+
    ```typescript
    // src/lib/auth-alerts.ts
    export class AuthAlerts {
      static async checkFailureRate(): Promise<void> {
-       const failureRate = await this.getFailureRate('1h');
-       if (failureRate > 0.05) { // 5%を超える場合
-         await this.sendAlert('High auth failure rate detected', { rate: failureRate });
+       const failureRate = await this.getFailureRate("1h");
+       if (failureRate > 0.05) {
+         // 5%を超える場合
+         await this.sendAlert("High auth failure rate detected", {
+           rate: failureRate,
+         });
        }
      }
    }
@@ -156,12 +169,13 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
      return NextResponse.json({
        status: health.overall,
        checks: health.checks,
-       timestamp: new Date().toISOString()
+       timestamp: new Date().toISOString(),
      });
    }
    ```
 
 #### 成功基準
+
 - リアルタイム監視ダッシュボード構築
 - 異常検知アラート機能実装
 - 99.9%以上の可用性確保
@@ -173,6 +187,7 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
 #### 実装項目
 
 1. **ユーザー体験改善**
+
    ```typescript
    // src/components/auth/LoadingState.tsx
    export function AuthLoadingState({ message }: { message: string }) {
@@ -189,39 +204,42 @@ Google OAuth認証の`no_code`エラー修復のための段階的実装計画�
    ```
 
 2. **エラーメッセージの多言語対応**
+
    ```typescript
    // src/lib/auth-messages.ts
    export const authMessages = {
      ja: {
-       no_code: '認証に失敗しました。再度お試しください。',
-       network_error: 'ネットワークエラーが発生しました。',
-       retry_button: 'もう一度試す'
+       no_code: "認証に失敗しました。再度お試しください。",
+       network_error: "ネットワークエラーが発生しました。",
+       retry_button: "もう一度試す",
      },
      en: {
-       no_code: 'Authentication failed. Please try again.',
-       network_error: 'A network error occurred.',
-       retry_button: 'Try Again'
-     }
+       no_code: "Authentication failed. Please try again.",
+       network_error: "A network error occurred.",
+       retry_button: "Try Again",
+     },
    };
    ```
 
 3. **セキュリティ強化**
+
    ```typescript
    // src/middleware.ts
    export function middleware(request: NextRequest) {
      // CSRF対策
-     if (request.nextUrl.pathname.startsWith('/auth/callback')) {
+     if (request.nextUrl.pathname.startsWith("/auth/callback")) {
        return validateCSRF(request);
      }
 
      // レート制限
-     if (request.nextUrl.pathname.startsWith('/api/auth/')) {
+     if (request.nextUrl.pathname.startsWith("/api/auth/")) {
        return applyRateLimit(request);
      }
    }
    ```
 
 #### 成功基準
+
 - ユーザビリティテスト合格
 - セキュリティ監査合格
 - アクセシビリティ対応完了
@@ -254,12 +272,12 @@ gantt
 
 ### 開発者アサイン
 
-| フェーズ | 担当者 | 工数 | 専門分野 |
-|---------|--------|------|----------|
-| Phase 0 | シニア開発者A | 16h | デバッグ・問題特定 |
-| Phase 1 | シニア開発者A + 開発者B | 40h | 認証システム実装 |
-| Phase 2 | 開発者B + インフラエンジニア | 24h | 監視・運用基盤 |
-| Phase 3 | 開発者B + UXエンジニア | 32h | UX・セキュリティ |
+| フェーズ | 担当者                       | 工数 | 専門分野           |
+| -------- | ---------------------------- | ---- | ------------------ |
+| Phase 0  | シニア開発者A                | 16h  | デバッグ・問題特定 |
+| Phase 1  | シニア開発者A + 開発者B      | 40h  | 認証システム実装   |
+| Phase 2  | 開発者B + インフラエンジニア | 24h  | 監視・運用基盤     |
+| Phase 3  | 開発者B + UXエンジニア       | 32h  | UX・セキュリティ   |
 
 ### 技術スタック
 
@@ -275,24 +293,24 @@ gantt
 
 ```typescript
 // __tests__/auth/callback.test.ts
-describe('認証コールバック', () => {
-  it('有効な認証コードでセッション作成成功', async () => {
+describe("認証コールバック", () => {
+  it("有効な認証コードでセッション作成成功", async () => {
     const mockRequest = createMockRequest({
-      code: 'valid_auth_code',
-      state: 'valid_state'
+      code: "valid_auth_code",
+      state: "valid_state",
     });
 
     const response = await GET(mockRequest);
     expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toBe('/');
+    expect(response.headers.get("location")).toBe("/");
   });
 
-  it('認証コード不在でエラーページリダイレクト', async () => {
+  it("認証コード不在でエラーページリダイレクト", async () => {
     const mockRequest = createMockRequest({});
 
     const response = await GET(mockRequest);
     expect(response.status).toBe(302);
-    expect(response.headers.get('location')).toContain('error=no_code');
+    expect(response.headers.get("location")).toContain("error=no_code");
   });
 });
 ```
@@ -301,10 +319,10 @@ describe('認証コールバック', () => {
 
 ```typescript
 // __tests__/integration/auth-flow.test.ts
-describe('認証フロー統合テスト', () => {
-  it('完全な認証フローが正常動作', async () => {
+describe("認証フロー統合テスト", () => {
+  it("完全な認証フローが正常動作", async () => {
     // 1. 認証開始
-    const authStartResponse = await startAuthentication('google');
+    const authStartResponse = await startAuthentication("google");
 
     // 2. Google認証（モック）
     const authCode = await simulateGoogleAuth(authStartResponse.authUrl);
@@ -340,11 +358,11 @@ describe('認証フロー統合テスト', () => {
 
 ### 高リスク項目
 
-| リスク | 影響度 | 発生確率 | 対策 |
-|--------|--------|----------|------|
-| 本番環境での認証完全停止 | 高 | 低 | 段階的デプロイ、ロールバック計画 |
-| 既存ユーザーセッション無効化 | 中 | 中 | セッション移行スクリプト |
-| セキュリティホール作成 | 高 | 低 | セキュリティレビュー、監査 |
+| リスク                       | 影響度 | 発生確率 | 対策                             |
+| ---------------------------- | ------ | -------- | -------------------------------- |
+| 本番環境での認証完全停止     | 高     | 低       | 段階的デプロイ、ロールバック計画 |
+| 既存ユーザーセッション無効化 | 中     | 中       | セッション移行スクリプト         |
+| セキュリティホール作成       | 高     | 低       | セキュリティレビュー、監査       |
 
 ### 緊急時対応手順
 
