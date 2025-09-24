@@ -9,6 +9,16 @@ export async function GET(request: Request) {
     const { searchParams, origin } = new URL(request.url);
     const code = searchParams.get("code");
     const error = searchParams.get("error");
+    const state = searchParams.get("state");
+
+    // デバッグ情報をログ出力
+    console.log("=== Auth Callback Debug Info ===");
+    console.log("Request URL:", request.url);
+    console.log("Origin:", origin);
+    console.log("Code:", code ? "present" : "missing");
+    console.log("Error:", error);
+    console.log("State:", state);
+    console.log("All search params:", Array.from(searchParams.entries()));
 
     // OAuth エラーがある場合
     if (error) {
@@ -19,7 +29,8 @@ export async function GET(request: Request) {
     // code パラメータがない場合
     if (!code) {
       console.log("No code parameter received");
-      return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
+      console.log("Available params:", Array.from(searchParams.entries()));
+      return NextResponse.redirect(`${origin}/auth/login?error=no_code&debug=missing_code_param`);
     }
 
     // Supabase クライアント作成

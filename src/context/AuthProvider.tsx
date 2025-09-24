@@ -155,7 +155,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const redirectUrl = `${window.location.origin}/auth/callback`;
 
-      const { error } = await supabase.auth.signInWithOAuth({
+      console.log("=== Google Auth Debug ===");
+      console.log("Redirect URL:", redirectUrl);
+      console.log("Origin:", window.location.origin);
+      console.log("Current URL:", window.location.href);
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: redirectUrl,
@@ -163,8 +168,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             access_type: "offline",
             prompt: "consent",
           },
+          skipBrowserRedirect: false, // 明示的に設定
         },
       });
+
+      console.log("OAuth response:", { data, error });
 
       if (error) {
         console.error("Google sign in error:", error);
