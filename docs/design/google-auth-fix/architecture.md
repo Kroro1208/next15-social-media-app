@@ -7,12 +7,14 @@
 ## 現在のアーキテクチャ分析
 
 ### 技術スタック
+
 - **フロントエンド**: Next.js 15.4.4 + React 19.1.1 + TypeScript 5.7.2
 - **認証基盤**: Supabase Auth + Google OAuth 2.0
 - **デプロイ環境**: Vercel (サーバーレス)
 - **状態管理**: Jotai + TanStack React Query
 
 ### 現在の認証フロー
+
 ```
 User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Session → Home (/)
                 ↓ (問題発生)
@@ -38,6 +40,7 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ## 修復アーキテクチャ設計
 
 ### アーキテクチャパターン
+
 - **パターン**: OAuth 2.0 Authorization Code Flow with PKCE
 - **理由**: セキュリティ強化とSPA環境での推奨実装
 - **実装方式**: Supabase Auth SDK による統一管理
@@ -45,6 +48,7 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ### コンポーネント構成
 
 #### フロントエンド層
+
 ```
 ┌─────────────────────────────────────────┐
 │          フロントエンド (Next.js)        │
@@ -62,6 +66,7 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ```
 
 #### API層（App Router）
+
 ```
 ┌─────────────────────────────────────────┐
 │        API Layer (App Router)          │
@@ -80,6 +85,7 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ```
 
 #### 認証基盤
+
 ```
 ┌─────────────────────────────────────────┐
 │         Supabase Auth Layer            │
@@ -96,6 +102,7 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ```
 
 #### インフラ・モニタリング層
+
 ```
 ┌─────────────────────────────────────────┐
 │      Infrastructure & Monitoring       │
@@ -115,12 +122,14 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ## セキュリティ設計
 
 ### 認証セキュリティ
+
 - **PKCE実装**: Code Verifier/Challenge による認証強化
 - **CSRF対策**: State パラメータによる検証
 - **セッション保護**: Secure Cookie + HttpOnly フラグ
 - **リダイレクト検証**: 許可されたリダイレクトURLの厳格チェック
 
 ### データ保護
+
 - **機密情報の非ログ出力**: 認証コード・トークンの保護
 - **HTTPS強制**: 全通信の暗号化
 - **環境変数の適切な管理**: Vercel Environment Variables活用
@@ -128,11 +137,13 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ## パフォーマンス設計
 
 ### レスポンス時間最適化
+
 - **認証処理**: 5秒以内完了目標
 - **エラー処理**: 3秒以内レスポンス
 - **キャッシュ戦略**: 認証状態の効率的管理
 
 ### スケーラビリティ
+
 - **サーバーレス対応**: Vercel Functions の制約考慮
 - **同時接続**: 100ユーザー同時認証対応
 - **地域対応**: エッジデプロイメント活用
@@ -140,11 +151,13 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ## 可用性・信頼性設計
 
 ### エラー回復
+
 - **自動リトライ**: ネットワークエラー時の再試行
 - **グレースフルデグラデーション**: 部分的な機能停止時の対応
 - **フォールバック**: 代替認証手段の提供
 
 ### モニタリング
+
 - **ヘルスチェック**: 認証サービス生存監視
 - **アラート**: 認証失敗率の閾値監視
 - **ダッシュボード**: リアルタイム認証状況表示
@@ -152,35 +165,41 @@ User → Google OAuth → Callback (/auth/callback) → Supabase Auth → Sessio
 ## 技術的制約と対策
 
 ### Vercel制約への対応
+
 ```typescript
 // サーバーレス関数の最適化
-export const runtime = 'edge'; // エッジランタイム活用
-export const dynamic = 'force-dynamic'; // 動的処理の明示
+export const runtime = "edge"; // エッジランタイム活用
+export const dynamic = "force-dynamic"; // 動的処理の明示
 ```
 
 ### Next.js App Router対応
+
 ```typescript
 // App Router のリダイレクト処理
-import { NextResponse } from 'next/server';
-return NextResponse.redirect(new URL('/', request.url));
+import { NextResponse } from "next/server";
+return NextResponse.redirect(new URL("/", request.url));
 ```
 
 ### 環境差異の解決
+
 ```typescript
 // 環境に応じた設定分岐
-const redirectUrl = process.env.NODE_ENV === 'production'
-  ? process.env.NEXT_PUBLIC_SITE_URL
-  : 'http://localhost:3000';
+const redirectUrl =
+  process.env.NODE_ENV === "production"
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : "http://localhost:3000";
 ```
 
 ## 実装戦略
 
 ### フェーズド・アプローチ
+
 1. **Phase 1**: 緊急修復（コールバック処理とエラーハンドリング）
 2. **Phase 2**: 監視・ログ強化
 3. **Phase 3**: UX改善とセキュリティ強化
 
 ### リスク軽減
+
 - **段階的デプロイ**: 機能フラグによる制御
 - **A/Bテスト**: 新旧実装の比較検証
 - **ロールバック計画**: 問題発生時の即座復旧
