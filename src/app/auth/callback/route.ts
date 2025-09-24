@@ -3,37 +3,22 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   try {
-    const supabaseUrl = process.env["SUPABASE_URL"]!;
-    const supabaseAnonKey = process.env["SUPABASE_ANON_KEY"]!;
-
-    const { searchParams, origin } = new URL(request.url);
-    const code = searchParams.get("code");
+    const { origin, searchParams } = new URL(request.url);
     const error = searchParams.get("error");
 
+    // PKCEフローの場合、エラーがある場合のみ処理し、
+    // 通常の認証はクライアントサイドで処理される
     if (error) {
+      console.error("OAuth error received:", error);
       return NextResponse.redirect(`${origin}/auth/login?error=${error}`);
     }
 
-    if (!code) {
-      return NextResponse.redirect(`${origin}/auth/login?error=no_code`);
-    }
-
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
-    const { data, error: exchangeError } =
-      await supabase.auth.exchangeCodeForSession(code);
-
-    if (exchangeError) {
-      return NextResponse.redirect(
-        `${origin}/auth/login?error=exchange_failed`,
-      );
-    }
-
-    if (!data.session) {
-      return NextResponse.redirect(`${origin}/auth/login?error=no_session`);
-    }
-
-    return NextResponse.redirect(`${origin}/`);
+    // PKCEフローでは認証情報がフラグメント（#）で渡されるため、
+    // クライアントサイドで処理する必要がある
+    // ここではクライアントコールバックページにリダイレクト
+    return NextResponse.redirect(`${origin}/auth/callback-client`);
   } catch (error) {
+    console.error("Callback error:", error);
     const { origin } = new URL(request.url);
     return NextResponse.redirect(`${origin}/auth/login?error=callback_failed`);
   }
