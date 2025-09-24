@@ -30,7 +30,9 @@ export async function GET(request: Request) {
     if (!code) {
       console.log("No code parameter received");
       console.log("Available params:", Array.from(searchParams.entries()));
-      return NextResponse.redirect(`${origin}/auth/login?error=no_code&debug=missing_code_param`);
+      return NextResponse.redirect(
+        `${origin}/auth/login?error=no_code&debug=missing_code_param`,
+      );
     }
 
     // Supabase クライアント作成

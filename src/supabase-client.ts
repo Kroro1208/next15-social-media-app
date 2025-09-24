@@ -30,7 +30,7 @@ export const supabase = createClient(finalURL, finalKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: "implicit", // PKCEからimplicitに変更
+    flowType: "implicit", // implicit flowに統一
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     debug: true,
   },
