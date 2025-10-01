@@ -29,7 +29,7 @@ export const supabase = createClient(finalURL, finalKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: false, // PKCEフローではサーバーサイドで処理
     flowType: "pkce",
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     debug: true,
