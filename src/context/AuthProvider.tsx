@@ -153,12 +153,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = useCallback(async () => {
     try {
-      const redirectUrl = `${window.location.origin}`;
+      // PKCEフローではクライアントサイドで完結させる
+      const redirectUrl = `${window.location.origin}/auth/login`;
 
       console.log("=== Google Auth Debug ===");
       console.log("Redirect URL:", redirectUrl);
-      console.log("Origin:", window.location.origin);
-      console.log("Current URL:", window.location.href);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -168,7 +167,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             access_type: "offline",
             prompt: "consent",
           },
-          skipBrowserRedirect: false, // 明示的に設定
         },
       });
 
