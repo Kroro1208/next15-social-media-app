@@ -29,9 +29,7 @@ export async function GET(request: Request) {
 
     if (!supabaseUrl || !supabaseAnonKey) {
       console.error("Missing Supabase environment variables");
-      return NextResponse.redirect(
-        `${origin}/auth/login?error=server_config`,
-      );
+      return NextResponse.redirect(`${origin}/auth/login?error=server_config`);
     }
 
     const cookieStore = await cookies();

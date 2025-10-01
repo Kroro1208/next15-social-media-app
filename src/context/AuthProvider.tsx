@@ -9,11 +9,11 @@ export interface AuthContextType {
   signInWithGoogle: () => void;
   signInWithEmail: (
     email: string,
-    password: string
+    password: string,
   ) => Promise<{ error?: string }>;
   signUpWithEmail: (
     email: string,
-    password: string
+    password: string,
   ) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           !window.location.pathname.includes("/auth/callback")
         ) {
           console.log(
-            "URL has hash (not in callback), attempting to get session from URL"
+            "URL has hash (not in callback), attempting to get session from URL",
           );
           const { data, error } = await supabase.auth.getSession();
           console.log("getSession result:", { data, error });
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               }).catch((error) => {
                 console.error(
                   "Error setting cookies during initialization:",
-                  error
+                  error,
                 );
               });
             }
@@ -201,7 +201,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: "サインインエラーが発生しました" };
       }
     },
-    []
+    [],
   );
 
   const signUpWithEmail = useCallback(
@@ -224,7 +224,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error: "サインアップエラーが発生しました" };
       }
     },
-    []
+    [],
   );
 
   const signOut = useCallback(async () => {
@@ -247,7 +247,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       signUpWithEmail,
       signOut,
     }),
-    [user, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut]
+    [
+      user,
+      loading,
+      signInWithGoogle,
+      signInWithEmail,
+      signUpWithEmail,
+      signOut,
+    ],
   );
 
   return (
