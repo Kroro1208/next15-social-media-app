@@ -29,8 +29,8 @@ export const supabase = createClient(finalURL, finalKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true, // クライアントサイドでURL検出
-    flowType: "pkce",
+    detectSessionInUrl: true,
+    flowType: "implicit", // Supabaseが#access_tokenで返すため
     storage: typeof window !== "undefined" ? window.localStorage : undefined,
     debug: true,
   },
