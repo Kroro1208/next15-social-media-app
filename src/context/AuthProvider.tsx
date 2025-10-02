@@ -153,11 +153,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signInWithGoogle = useCallback(async () => {
     try {
-      // PKCEフローではクライアントサイドで完結させる
       const redirectUrl = `${window.location.origin}/auth/login`;
 
-      console.log("=== Google Auth Debug ===");
+      console.log("=== Google Auth Debug v2 ===");
       console.log("Redirect URL:", redirectUrl);
+      console.log("Code version: cf6724a");
 
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
