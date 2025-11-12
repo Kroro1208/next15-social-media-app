@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useLanguage } from "../../hooks/useLanguage";
 import { Clock, Flame, TrendingUp, Zap } from "lucide-react";
@@ -8,11 +8,17 @@ import { useState } from "react";
 
 const TabSection = () => {
   const { t } = useLanguage();
-  const [activeTab, setActiveTab] = useState<"all" | "urgent" | "popular" | "recent">("all");
+  const [activeTab, setActiveTab] = useState<
+    "all" | "urgent" | "popular" | "recent"
+  >("all");
 
   return (
     <div className="bg-gradient-to-br from-slate-50 via-gray-50 to-indigo-50 dark:from-gray-800 dark:via-gray-800 dark:to-indigo-900">
-      <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as typeof activeTab)} className="w-full">
+      <Tabs
+        value={activeTab}
+        onValueChange={(value) => setActiveTab(value as typeof activeTab)}
+        className="w-full"
+      >
         <div className="px-4 pt-4">
           <TabsList className="grid w-full grid-cols-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
             <TabsTrigger
