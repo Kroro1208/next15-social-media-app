@@ -412,20 +412,14 @@ const CreateNestedPost = ({
                   <SelectTrigger className="text-sm w-full border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-300 rounded-xl">
                     <SelectValue placeholder="質問の対象者を選択してください" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
-                    <SelectItem
-                      value="1"
-                      className="py-3 text-gray-900 dark:text-gray-100 focus:bg-green-100 dark:focus:bg-green-900/30 focus:text-black dark:focus:text-white"
-                    >
+                  <SelectContent>
+                    <SelectItem value="1">
                       <div className="flex items-center gap-2">
                         <FaArrowAltCircleUp className="text-green-500" />
                         <p>賛成者に対して質問する</p>
                       </div>
                     </SelectItem>
-                    <SelectItem
-                      value="-1"
-                      className="py-3 text-gray-900 dark:text-gray-100 focus:bg-red-100 dark:focus:bg-red-900/30 focus:text-black dark:focus:text-white"
-                    >
+                    <SelectItem value="-1">
                       <div className="flex items-center gap-2">
                         <FaArrowAltCircleDown className="text-red-500" />
                         <p>反対者に対して質問する</p>
