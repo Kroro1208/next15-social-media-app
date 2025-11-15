@@ -212,12 +212,11 @@ const CreatePost = () => {
                             placeholder={t("create.post.space.placeholder")}
                           />
                         </SelectTrigger>
-                        <SelectContent className="rounded-xl border-2 border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700">
+                        <SelectContent>
                           {communityData?.map((item) => (
                             <SelectItem
                               key={item.id}
                               value={item.id.toString()}
-                              className="py-3 text-gray-900 dark:text-gray-100 focus:bg-purple-50 dark:focus:bg-purple-900/50"
                             >
                               {item.name}
                             </SelectItem>
