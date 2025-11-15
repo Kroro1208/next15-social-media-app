@@ -63,13 +63,18 @@ const TagSection = ({
   }
 
   return (
-    <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border">
-      <Label
-        htmlFor="tag_ids"
-        className="text-lg font-semibold text-gray-700 dark:text-gray-200"
-      >
-        {t("create.post.tag.title")}
-      </Label>
+    <div className="space-y-4 p-6 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-gray-800/80 dark:to-gray-900/80 rounded-xl border-2 border-blue-200 dark:border-gray-700">
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+          <Hash className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        </div>
+        <Label
+          htmlFor="tag_ids"
+          className="text-lg font-semibold text-gray-700 dark:text-gray-200"
+        >
+          {t("create.post.tag.title")}
+        </Label>
+      </div>
 
       <Controller
         name="tag_ids"
@@ -114,45 +119,48 @@ const TagSection = ({
 
           return (
             <>
-              <div className="rounded-lg bg-white dark:bg-gray-900/60 border border-dashed border-gray-200 dark:border-gray-700 p-4 space-y-3">
-                <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
-                  <span>
-                    {t("create.post.tag.select")}{" "}
-                    <span className="font-semibold text-gray-900 dark:text-gray-100">
+              {/* 選択したタグの表示エリア */}
+              <div className="rounded-lg bg-white dark:bg-gray-900 border-2 border-blue-300 dark:border-blue-700 p-5 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                      選択中のタグ
+                    </span>
+                    <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/50 text-xs font-bold text-blue-700 dark:text-blue-300">
                       {selectedTagIds.length}/{MAX_TAG_SELECTION}
                     </span>
-                  </span>
+                  </div>
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
                     disabled={selectedTagIds.length === 0}
                     onClick={handleClearTags}
-                    className="text-xs text-gray-500 hover:text-gray-900 dark:text-gray-400"
+                    className="text-xs text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                   >
-                    {t("create.post.tag.none")}
+                    すべて解除
                   </Button>
                 </div>
 
-                <div className="flex flex-wrap gap-2 min-h-10 items-center">
+                <div className="flex flex-wrap gap-2 min-h-14 items-center p-3 bg-gray-50 dark:bg-gray-800/50 rounded-md">
                   {selectedTagDetails.length === 0 ? (
-                    <span className="text-sm text-gray-500">
-                      {t("create.post.tag.none")}
+                    <span className="text-sm text-gray-400 dark:text-gray-500 italic">
+                      タグを選択してください（最大3つまで）
                     </span>
                   ) : (
                     selectedTagDetails.map((tag) => (
                       <span
                         key={tag.id}
-                        className="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105"
                       >
                         #{tag.name}
                         <button
                           type="button"
                           aria-label="remove tag"
                           onClick={() => handleTagToggle(tag.id)}
-                          className="hover:text-red-600 transition-colors"
+                          className="hover:text-red-200 transition-colors rounded-full hover:bg-white/20 p-0.5"
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-4 w-4" />
                         </button>
                       </span>
                     ))
@@ -160,19 +168,27 @@ const TagSection = ({
                 </div>
 
                 {errors?.tag_ids?.message && (
-                  <p className="text-xs text-red-600 dark:text-red-400">
+                  <p className="text-xs text-red-600 dark:text-red-400 font-medium">
                     {errors.tag_ids.message as string}
                   </p>
                 )}
               </div>
 
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                  選択可能なタグ
-                </p>
+              {/* 選択可能なタグリスト */}
+              <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    選択可能なタグ（クリックして選択）
+                  </p>
+                  {!canSelectMore && (
+                    <p className="text-xs text-amber-600 dark:text-amber-400 font-medium bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
+                      上限に達しました
+                    </p>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto pr-1">
                   {tagsData.length === 0 ? (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {t("create.post.tag.none")}
                     </p>
                   ) : (
@@ -187,11 +203,11 @@ const TagSection = ({
                           size="sm"
                           disabled={disabled}
                           onClick={() => handleTagToggle(tag.id)}
-                          className={`text-sm ${
+                          className={`text-sm font-medium transition-all duration-200 ${
                             isSelected
-                              ? "bg-blue-600 text-white hover:bg-blue-500"
-                              : "text-gray-700 dark:text-gray-200"
-                          }`}
+                              ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-md"
+                              : "text-gray-700 dark:text-gray-200 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 dark:hover:border-blue-600"
+                          } ${disabled ? "opacity-50 cursor-not-allowed" : "hover:scale-105"}`}
                         >
                           #{tag.name}
                         </Button>
@@ -199,11 +215,10 @@ const TagSection = ({
                     })
                   )}
                 </div>
-                {!canSelectMore && (
-                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-2">
-                    タグは最大{MAX_TAG_SELECTION}つまで選択できます
-                  </p>
-                )}
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                  💡 ヒント: 複数のタグを選択できます（最大{MAX_TAG_SELECTION}
+                  個）
+                </p>
               </div>
 
               {/* 新しいタグの作成 */}

@@ -490,10 +490,10 @@ const CreateNestedPost = ({
         <div className="group">
           <Label
             htmlFor="image"
-            className="flex items-center gap-3 text-lg font-semibold text-gray-700 mb-4"
+            className="flex items-center gap-3 text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4"
           >
-            <div className="p-2 bg-rose-100 rounded-lg group-hover:bg-rose-200 transition-colors">
-              <ImageIcon className="h-5 w-5 text-rose-600" />
+            <div className="p-2 bg-rose-100 dark:bg-rose-900/30 rounded-lg group-hover:bg-rose-200 dark:group-hover:bg-rose-800/40 transition-colors">
+              <ImageIcon className="h-5 w-5 text-rose-600 dark:text-rose-400" />
             </div>
             画像アップロード（任意）
           </Label>
@@ -504,11 +504,11 @@ const CreateNestedPost = ({
               type="file"
               accept="image/*"
               {...register("image")}
-              className="border-2 border-gray-200 dark:border-gray-600 focus:border-rose-500 focus:ring-2 focus:ring-rose-200 transition-all duration-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="border-2 border-gray-200 dark:border-gray-600 focus:border-rose-500 dark:focus:border-rose-400 focus:ring-2 focus:ring-rose-200 dark:focus:ring-rose-800 transition-all duration-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
             />
           </div>
           {errors.image && (
-            <p className="mt-2 text-sm text-red-600">
+            <p className="mt-2 text-sm text-red-600 dark:text-red-400">
               {String(errors.image?.message || "")}
             </p>
           )}
