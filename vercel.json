@@ -1,13 +1,13 @@
 {
-  "functions": {
-    "src/app/auth/callback/route.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/auth/callback",
-      "destination": "/auth/callback"
-    }
-  ]
+	"functions": {
+		"src/app/auth/callback/route.ts": {
+			"runtime": "nodejs18.x"
+		}
+	},
+	"rewrites": [
+		{
+			"source": "/auth/callback",
+			"destination": "/auth/callback"
+		}
+	]
 }

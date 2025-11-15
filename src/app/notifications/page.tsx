@@ -1,7 +1,7 @@
 import NotificationsPage from "../pages/NotificationsPage";
 
 const Notifications = () => {
-  return <NotificationsPage />;
+	return <NotificationsPage />;
 };
 
 export default Notifications;

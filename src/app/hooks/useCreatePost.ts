@@ -1,11 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
+import { supabase } from "../../supabase-client";
+import { checkRateLimit, RateLimitError } from "../../utils/rateLimiter";
 import { useAuth } from "./useAuth";
 import { useLanguage } from "./useLanguage";
 import { usePostLimits } from "./usePostLimits";
-import { supabase } from "../../supabase-client";
-import { checkRateLimit, RateLimitError } from "../../utils/rateLimiter";
 
 export interface PostInput {
   title: string;
@@ -13,6 +14,7 @@ export interface PostInput {
   avatar_url: string | null;
   community_id?: number | null;
   tag_id?: number | null | undefined;
+  tag_ids?: number[] | null | undefined;
   vote_deadline?: string | null;
   user_id?: string;
   parent_post_id?: number | null | undefined;
@@ -45,6 +47,7 @@ const createPost = async (post: PostInput, imageFile: File) => {
     p_avatar_url: post.avatar_url,
     p_community_id: post.community_id,
     p_tag_id: post.tag_id,
+    p_tag_ids: post.tag_ids && post.tag_ids.length > 0 ? post.tag_ids : null,
     p_vote_deadline: post.vote_deadline,
     p_user_id: post.user_id,
     p_image_url: publicUrlData.publicUrl,
@@ -70,7 +73,17 @@ export const useCreatePost = () => {
       router.push("/");
     },
     onError: (error) => {
-      console.error(error.message);
+      const message =
+        error instanceof Error
+          ? error.message
+          : typeof error === "string"
+            ? error
+            : "";
+      if (message) {
+        console.error(message);
+      } else {
+        console.error("Unknown error occurred while creating post");
+      }
       toast.error(t("create.post.error.create.failed"));
     },
   });
@@ -80,13 +93,13 @@ export const useCreatePost = () => {
       title: string;
       content: string;
       community_id: number | null;
-      tag_id?: number | null | undefined;
+      tag_ids?: number[] | null | undefined;
       vote_deadline: Date;
       image?: FileList | null;
       parent_post_id?: number | null | undefined;
     },
     reset: () => void,
-    setIsSubmitting: (value: boolean) => void,
+    setIsSubmitting: (value: boolean) => void
   ) => {
     if (!user) {
       toast.error(t("create.post.error.login.required"));
@@ -107,7 +120,7 @@ export const useCreatePost = () => {
     // 投稿制限チェック
     if (!postLimitStatus?.can_post) {
       toast.error(
-        "本日の投稿制限に達しています。ポイントを使用して制限を解除するか、明日再度お試しください。",
+        "本日の投稿制限に達しています。ポイントを使用して制限を解除するか、明日再度お試しください。"
       );
       return;
     }
@@ -128,14 +141,28 @@ export const useCreatePost = () => {
 
     setIsSubmitting(true);
 
+    const selectedTags = data.tag_ids || [];
+    const primaryTagId =
+      selectedTags && selectedTags.length > 0 ? selectedTags[0] : null;
+    const avatarUrl =
+      (
+        user?.user_metadata as
+          | {
+              avatar_url?: string;
+            }
+          | undefined
+      )?.avatar_url || null;
+
     mutate(
       {
         post: {
           title: data.title,
           content: data.content,
-          avatar_url: user?.user_metadata?.["avatar_url"] || null,
+          avatar_url: avatarUrl,
           community_id: data.community_id,
-          tag_id: data.tag_id,
+          tag_id: primaryTagId,
+          tag_ids:
+            selectedTags && selectedTags.length > 0 ? selectedTags : null,
           vote_deadline: data.vote_deadline.toISOString(),
           user_id: user?.id,
           parent_post_id: data.parent_post_id,
@@ -147,7 +174,7 @@ export const useCreatePost = () => {
           setIsSubmitting(false);
           reset();
         },
-      },
+      }
     );
   };
 

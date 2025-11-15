@@ -1,7 +1,7 @@
 import UserRankingPage from "../pages/UserRankingPage";
 
 const UserRanking = () => {
-  return <UserRankingPage />;
+	return <UserRankingPage />;
 };
 
 export default UserRanking;

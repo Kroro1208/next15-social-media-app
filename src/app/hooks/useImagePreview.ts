@@ -1,41 +1,41 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useImagePreview = (watchImage: FileList | null) => {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+	const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!watchImage || watchImage.length === 0) {
-      setImagePreview(null);
-      return;
-    }
+	useEffect(() => {
+		if (!watchImage || watchImage.length === 0) {
+			setImagePreview(null);
+			return;
+		}
 
-    // 画像が選択された場合、プレビューを表示
-    const file = watchImage[0];
-    if (file) {
-      const objUrl = URL.createObjectURL(file);
-      setImagePreview(objUrl);
+		// 画像が選択された場合、プレビューを表示
+		const file = watchImage[0];
+		if (file) {
+			const objUrl = URL.createObjectURL(file);
+			setImagePreview(objUrl);
 
-      // コンポーネントのアンマウント時にオブジェクトURLを解放
-      return () => URL.revokeObjectURL(objUrl);
-    }
+			// コンポーネントのアンマウント時にオブジェクトURLを解放
+			return () => URL.revokeObjectURL(objUrl);
+		}
 
-    return () => {};
-  }, [watchImage]);
+		return () => {};
+	}, [watchImage]);
 
-  const handleRemoveImage = (
-    setValue: (name: string, value: FileList) => void,
-  ) => {
-    setValue(
-      "image",
-      (typeof window !== "undefined"
-        ? new DataTransfer().files
-        : null) as FileList,
-    );
-    setImagePreview(null);
-  };
+	const handleRemoveImage = (
+		setValue: (name: string, value: FileList) => void,
+	) => {
+		setValue(
+			"image",
+			(typeof window !== "undefined"
+				? new DataTransfer().files
+				: null) as FileList,
+		);
+		setImagePreview(null);
+	};
 
-  return {
-    imagePreview,
-    handleRemoveImage,
-  };
+	return {
+		imagePreview,
+		handleRemoveImage,
+	};
 };

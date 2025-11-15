@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState, ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 
 interface ClientBoundaryProps {
-  children: ReactNode;
-  fallback?: ReactNode;
+	children: ReactNode;
+	fallback?: ReactNode;
 }
 
 /**
@@ -12,25 +12,25 @@ interface ClientBoundaryProps {
  * DOM変更からReactコンポーネントを保護する
  */
 export default function ClientBoundary({
-  children,
-  fallback = null,
+	children,
+	fallback = null,
 }: ClientBoundaryProps) {
-  const [isMounted, setIsMounted] = useState(false);
+	const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    // 少し遅延してマウント状態を true にする
-    // これによりブラウザ拡張機能の初期化を待つ
-    const timer = setTimeout(() => {
-      setIsMounted(true);
-    }, 10);
+	useEffect(() => {
+		// 少し遅延してマウント状態を true にする
+		// これによりブラウザ拡張機能の初期化を待つ
+		const timer = setTimeout(() => {
+			setIsMounted(true);
+		}, 10);
 
-    return () => clearTimeout(timer);
-  }, []);
+		return () => clearTimeout(timer);
+	}, []);
 
-  // サーバーサイドレンダリング時またはまだマウントされていない時
-  if (!isMounted) {
-    return <>{fallback}</>;
-  }
+	// サーバーサイドレンダリング時またはまだマウントされていない時
+	if (!isMounted) {
+		return <>{fallback}</>;
+	}
 
-  return <>{children}</>;
+	return <>{children}</>;
 }
