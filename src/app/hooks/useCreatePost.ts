@@ -99,7 +99,7 @@ export const useCreatePost = () => {
       parent_post_id?: number | null | undefined;
     },
     reset: () => void,
-    setIsSubmitting: (value: boolean) => void
+    setIsSubmitting: (value: boolean) => void,
   ) => {
     if (!user) {
       toast.error(t("create.post.error.login.required"));
@@ -120,7 +120,7 @@ export const useCreatePost = () => {
     // 投稿制限チェック
     if (!postLimitStatus?.can_post) {
       toast.error(
-        "本日の投稿制限に達しています。ポイントを使用して制限を解除するか、明日再度お試しください。"
+        "本日の投稿制限に達しています。ポイントを使用して制限を解除するか、明日再度お試しください。",
       );
       return;
     }
@@ -174,7 +174,7 @@ export const useCreatePost = () => {
           setIsSubmitting(false);
           reset();
         },
-      }
+      },
     );
   };
 

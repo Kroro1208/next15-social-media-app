@@ -1,51 +1,51 @@
 "use client";
 
 import React, {
-	createContext,
-	type ReactNode,
-	useCallback,
-	useState,
+  createContext,
+  type ReactNode,
+  useCallback,
+  useState,
 } from "react";
 
 export interface PageTransitionContextType {
-	isTransitioning: boolean;
-	startTransition: () => void;
-	endTransition: () => void;
+  isTransitioning: boolean;
+  startTransition: () => void;
+  endTransition: () => void;
 }
 
 export const PageTransitionContext = createContext<
-	PageTransitionContextType | undefined
+  PageTransitionContextType | undefined
 >(undefined);
 
 interface PageTransitionProviderProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 export function PageTransitionProvider({
-	children,
+  children,
 }: PageTransitionProviderProps) {
-	const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
-	const startTransition = useCallback(() => {
-		setIsTransitioning(true);
-	}, []);
+  const startTransition = useCallback(() => {
+    setIsTransitioning(true);
+  }, []);
 
-	const endTransition = useCallback(() => {
-		// 最小限の遷移時間を確保してスムーズな体験を提供
-		setTimeout(() => {
-			setIsTransitioning(false);
-		}, 150);
-	}, []);
+  const endTransition = useCallback(() => {
+    // 最小限の遷移時間を確保してスムーズな体験を提供
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 150);
+  }, []);
 
-	return (
-		<PageTransitionContext.Provider
-			value={{
-				isTransitioning,
-				startTransition,
-				endTransition,
-			}}
-		>
-			{children}
-		</PageTransitionContext.Provider>
-	);
+  return (
+    <PageTransitionContext.Provider
+      value={{
+        isTransitioning,
+        startTransition,
+        endTransition,
+      }}
+    >
+      {children}
+    </PageTransitionContext.Provider>
+  );
 }

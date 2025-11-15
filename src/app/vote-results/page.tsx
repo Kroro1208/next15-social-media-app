@@ -1,7 +1,7 @@
 import VoteResultsPage from "../pages/VoteResultsPage";
 
 const page = () => {
-	return <VoteResultsPage />;
+  return <VoteResultsPage />;
 };
 
 export default page;

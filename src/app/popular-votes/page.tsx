@@ -1,7 +1,7 @@
 import PopularVotesPage from "../pages/PopularVotesPage";
 
 const page = () => {
-	return <PopularVotesPage />;
+  return <PopularVotesPage />;
 };
 
 export default page;

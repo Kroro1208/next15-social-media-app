@@ -7,177 +7,177 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 // Deno グローバル宣言
 declare const Deno: {
-	serve: (handler: (request: Request) => Response | Promise<Response>) => void;
-	env: {
-		get(key: string): string | undefined;
-	};
+  serve: (handler: (request: Request) => Response | Promise<Response>) => void;
+  env: {
+    get(key: string): string | undefined;
+  };
 };
 
 console.log("Gemini AI投票分析 Edge Function 開始");
 
 const corsHeaders = {
-	"Access-Control-Allow-Origin": "*",
-	"Access-Control-Allow-Headers":
-		"authorization, x-client-info, apikey, content-type",
-	"Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 interface VoteAnalysisRequest {
-	postId: number;
+  postId: number;
 }
 
 interface VoteData {
-	vote: number;
-	created_at: string;
+  vote: number;
+  created_at: string;
 }
 
 interface CommentData {
-	content: string;
-	created_at: string;
-	author: string;
-	is_persuasion_comment: boolean;
-	upvotes: number;
-	downvotes: number;
-	id: number;
+  content: string;
+  created_at: string;
+  author: string;
+  is_persuasion_comment: boolean;
+  upvotes: number;
+  downvotes: number;
+  id: number;
 }
 
 interface CommentVoteData {
-	comment_id: number;
-	vote: number;
+  comment_id: number;
+  vote: number;
 }
 
 interface AnalysisResult {
-	trendAnalysis: string;
-	sentimentAnalysis: string;
-	discussionQuality: string;
-	persuasionEffectiveness: string;
-	overallAssessment: string;
-	confidenceScore: number;
+  trendAnalysis: string;
+  sentimentAnalysis: string;
+  discussionQuality: string;
+  persuasionEffectiveness: string;
+  overallAssessment: string;
+  confidenceScore: number;
 }
 
 Deno.serve(async (req: Request) => {
-	console.log("リクエスト受信:", req.method);
+  console.log("リクエスト受信:", req.method);
 
-	// Handle CORS preflight
-	if (req.method === "OPTIONS") {
-		return new Response(null, {
-			status: 200,
-			headers: corsHeaders,
-		});
-	}
+  // Handle CORS preflight
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 200,
+      headers: corsHeaders,
+    });
+  }
 
-	try {
-		console.log("環境変数確認...");
+  try {
+    console.log("環境変数確認...");
 
-		// Initialize Supabase client
-		const supabaseUrl = Deno.env.get("SUPABASE_URL");
-		const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
-		console.log("Supabase URL:", supabaseUrl ? "設定済み" : "未設定");
-		console.log("Service Key:", supabaseServiceKey ? "設定済み" : "未設定");
+    console.log("Supabase URL:", supabaseUrl ? "設定済み" : "未設定");
+    console.log("Service Key:", supabaseServiceKey ? "設定済み" : "未設定");
 
-		if (!supabaseUrl || !supabaseServiceKey) {
-			throw new Error("Supabase環境変数が設定されていません");
-		}
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Supabase環境変数が設定されていません");
+    }
 
-		const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-		// Initialize Gemini AI
-		const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
-		console.log("Gemini API Key:", geminiApiKey ? "設定済み" : "未設定");
+    // Initialize Gemini AI
+    const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
+    console.log("Gemini API Key:", geminiApiKey ? "設定済み" : "未設定");
 
-		if (!geminiApiKey) {
-			throw new Error("GEMINI_API_KEY環境変数が設定されていません");
-		}
+    if (!geminiApiKey) {
+      throw new Error("GEMINI_API_KEY環境変数が設定されていません");
+    }
 
-		const genAI = new GoogleGenerativeAI(geminiApiKey);
-		const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const genAI = new GoogleGenerativeAI(geminiApiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-		console.log("リクエストボディ解析...");
-		const { postId }: VoteAnalysisRequest = await req.json();
-		console.log("PostID:", postId);
+    console.log("リクエストボディ解析...");
+    const { postId }: VoteAnalysisRequest = await req.json();
+    console.log("PostID:", postId);
 
-		// 投票データを取得
-		const { data: votes, error: votesError } = await supabase
-			.from("votes")
-			.select("vote, created_at")
-			.eq("post_id", postId)
-			.order("created_at", { ascending: true });
+    // 投票データを取得
+    const { data: votes, error: votesError } = await supabase
+      .from("votes")
+      .select("vote, created_at")
+      .eq("post_id", postId)
+      .order("created_at", { ascending: true });
 
-		if (votesError) {
-			throw new Error(`投票データ取得エラー: ${votesError.message}`);
-		}
+    if (votesError) {
+      throw new Error(`投票データ取得エラー: ${votesError.message}`);
+    }
 
-		// コメントデータを取得（Upvote/Downvote数も含む）
-		const { data: comments, error: commentsError } = await supabase
-			.from("comments")
-			.select(
-				`
+    // コメントデータを取得（Upvote/Downvote数も含む）
+    const { data: comments, error: commentsError } = await supabase
+      .from("comments")
+      .select(
+        `
         content,
         created_at,
         author,
         is_persuasion_comment,
         id
       `,
-			)
-			.eq("post_id", postId)
-			.order("created_at", { ascending: true });
+      )
+      .eq("post_id", postId)
+      .order("created_at", { ascending: true });
 
-		if (commentsError) {
-			throw new Error(`コメントデータ取得エラー: ${commentsError.message}`);
-		}
+    if (commentsError) {
+      throw new Error(`コメントデータ取得エラー: ${commentsError.message}`);
+    }
 
-		// コメント投票数を一括取得（高速化）
-		const commentIds = comments.map((c: CommentData) => c.id);
-		const { data: allCommentVotes } = await supabase
-			.from("comment_votes")
-			.select("comment_id, vote")
-			.in("comment_id", commentIds);
+    // コメント投票数を一括取得（高速化）
+    const commentIds = comments.map((c: CommentData) => c.id);
+    const { data: allCommentVotes } = await supabase
+      .from("comment_votes")
+      .select("comment_id, vote")
+      .in("comment_id", commentIds);
 
-		// コメントごとの投票数を計算
-		const commentsWithVotes = comments.map((comment: CommentData) => {
-			const commentVotes =
-				allCommentVotes?.filter(
-					(v: CommentVoteData) => v.comment_id === comment.id,
-				) || [];
-			const upvotes = commentVotes.filter(
-				(v: CommentVoteData) => v.vote === 1,
-			).length;
-			const downvotes = commentVotes.filter(
-				(v: CommentVoteData) => v.vote === -1,
-			).length;
+    // コメントごとの投票数を計算
+    const commentsWithVotes = comments.map((comment: CommentData) => {
+      const commentVotes =
+        allCommentVotes?.filter(
+          (v: CommentVoteData) => v.comment_id === comment.id,
+        ) || [];
+      const upvotes = commentVotes.filter(
+        (v: CommentVoteData) => v.vote === 1,
+      ).length;
+      const downvotes = commentVotes.filter(
+        (v: CommentVoteData) => v.vote === -1,
+      ).length;
 
-			return {
-				...comment,
-				upvotes,
-				downvotes,
-			};
-		});
+      return {
+        ...comment,
+        upvotes,
+        downvotes,
+      };
+    });
 
-		// 投稿情報を取得
-		const { data: post } = await supabase
-			.from("posts")
-			.select("title, content, vote_deadline, created_at")
-			.eq("id", postId)
-			.single();
+    // 投稿情報を取得
+    const { data: post } = await supabase
+      .from("posts")
+      .select("title, content, vote_deadline, created_at")
+      .eq("id", postId)
+      .single();
 
-		// 分析データを準備
-		const analysisData = {
-			post: {
-				title: post?.title || "",
-				content: post?.content || "",
-				created_at: post?.created_at || "",
-				vote_deadline: post?.vote_deadline || "",
-			},
-			votes: votes as VoteData[],
-			comments: commentsWithVotes as CommentData[],
-			totalVotes: votes?.length || 0,
-			agreeVotes: votes?.filter((v: VoteData) => v.vote === 1).length || 0,
-			disagreeVotes: votes?.filter((v: VoteData) => v.vote === -1).length || 0,
-		};
+    // 分析データを準備
+    const analysisData = {
+      post: {
+        title: post?.title || "",
+        content: post?.content || "",
+        created_at: post?.created_at || "",
+        vote_deadline: post?.vote_deadline || "",
+      },
+      votes: votes as VoteData[],
+      comments: commentsWithVotes as CommentData[],
+      totalVotes: votes?.length || 0,
+      agreeVotes: votes?.filter((v: VoteData) => v.vote === 1).length || 0,
+      disagreeVotes: votes?.filter((v: VoteData) => v.vote === -1).length || 0,
+    };
 
-		// Gemini AIに送信するプロンプトを作成
-		const prompt = `
+    // Gemini AIに送信するプロンプトを作成
+    const prompt = `
 あなたは投票・議論プラットフォームの分析専門AIです。以下の投票データを分析し、日本語で詳細な分析結果を提供してください。
 
 ## 投稿情報
@@ -195,13 +195,13 @@ ${analysisData.votes.map((v: VoteData) => `${v.created_at}: ${v.vote === 1 ? "�
 
 ## コメントデータ
 ${analysisData.comments
-	.map(
-		(c: CommentData) =>
-			`作成者: ${c.author}, 時間: ${c.created_at}, 説得コメント: ${c.is_persuasion_comment ? "はい" : "いいえ"}, Upvotes: ${c.upvotes}, Downvotes: ${c.downvotes}
+  .map(
+    (c: CommentData) =>
+      `作成者: ${c.author}, 時間: ${c.created_at}, 説得コメント: ${c.is_persuasion_comment ? "はい" : "いいえ"}, Upvotes: ${c.upvotes}, Downvotes: ${c.downvotes}
 内容: ${c.content}
 ---`,
-	)
-	.join("\n")}
+  )
+  .join("\n")}
 
 以下の観点で分析してください：
 
@@ -224,76 +224,76 @@ ${analysisData.comments
 }
 `;
 
-		// Gemini AIで分析実行
-		const result = await model.generateContent(prompt);
-		const response = await result.response;
-		const analysisText = response.text();
+    // Gemini AIで分析実行
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const analysisText = response.text();
 
-		// JSONレスポンスを抽出
-		let analysisResult: AnalysisResult;
-		try {
-			// JSONブロックを抽出（```json と ``` の間）
-			const jsonMatch = analysisText.match(/```json\s*([\s\S]*?)\s*```/);
-			if (jsonMatch) {
-				analysisResult = JSON.parse(jsonMatch[1]);
-			} else {
-				// JSONブロックがない場合、全体をJSONとして解析を試行
-				analysisResult = JSON.parse(analysisText);
-			}
-		} catch {
-			// JSON解析に失敗した場合のフォールバック
-			analysisResult = {
-				trendAnalysis: "分析結果の解析に失敗しました",
-				sentimentAnalysis: "分析結果の解析に失敗しました",
-				discussionQuality: "分析結果の解析に失敗しました",
-				persuasionEffectiveness: "分析結果の解析に失敗しました",
-				overallAssessment: "分析結果の解析に失敗しました",
-				confidenceScore: 1,
-			};
-		}
+    // JSONレスポンスを抽出
+    let analysisResult: AnalysisResult;
+    try {
+      // JSONブロックを抽出（```json と ``` の間）
+      const jsonMatch = analysisText.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        analysisResult = JSON.parse(jsonMatch[1]);
+      } else {
+        // JSONブロックがない場合、全体をJSONとして解析を試行
+        analysisResult = JSON.parse(analysisText);
+      }
+    } catch {
+      // JSON解析に失敗した場合のフォールバック
+      analysisResult = {
+        trendAnalysis: "分析結果の解析に失敗しました",
+        sentimentAnalysis: "分析結果の解析に失敗しました",
+        discussionQuality: "分析結果の解析に失敗しました",
+        persuasionEffectiveness: "分析結果の解析に失敗しました",
+        overallAssessment: "分析結果の解析に失敗しました",
+        confidenceScore: 1,
+      };
+    }
 
-		// 分析結果をデータベースに保存
-		const { error: insertError } = await supabase
-			.from("ai_vote_analysis")
-			.upsert({
-				post_id: postId,
-				trend_analysis: analysisResult.trendAnalysis,
-				sentiment_analysis: analysisResult.sentimentAnalysis,
-				discussion_quality: analysisResult.discussionQuality,
-				persuasion_effectiveness: analysisResult.persuasionEffectiveness,
-				overall_assessment: analysisResult.overallAssessment,
-				confidence_score: analysisResult.confidenceScore,
-				analyzed_at: new Date().toISOString(),
-			});
+    // 分析結果をデータベースに保存
+    const { error: insertError } = await supabase
+      .from("ai_vote_analysis")
+      .upsert({
+        post_id: postId,
+        trend_analysis: analysisResult.trendAnalysis,
+        sentiment_analysis: analysisResult.sentimentAnalysis,
+        discussion_quality: analysisResult.discussionQuality,
+        persuasion_effectiveness: analysisResult.persuasionEffectiveness,
+        overall_assessment: analysisResult.overallAssessment,
+        confidence_score: analysisResult.confidenceScore,
+        analyzed_at: new Date().toISOString(),
+      });
 
-		if (insertError) {
-			console.error("分析結果保存エラー:", insertError);
-		}
+    if (insertError) {
+      console.error("分析結果保存エラー:", insertError);
+    }
 
-		return new Response(
-			JSON.stringify({
-				success: true,
-				analysis: analysisResult,
-			}),
-			{
-				headers: { ...corsHeaders, "Content-Type": "application/json" },
-				status: 200,
-			},
-		);
-	} catch (error) {
-		console.error("Gemini分析エラー:", error);
-		console.error("エラースタック:", error.stack);
+    return new Response(
+      JSON.stringify({
+        success: true,
+        analysis: analysisResult,
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200,
+      },
+    );
+  } catch (error) {
+    console.error("Gemini分析エラー:", error);
+    console.error("エラースタック:", error.stack);
 
-		return new Response(
-			JSON.stringify({
-				success: false,
-				error: error.message || "AI分析処理中にエラーが発生しました",
-				details: error.stack || "スタック情報なし",
-			}),
-			{
-				headers: { ...corsHeaders, "Content-Type": "application/json" },
-				status: 500,
-			},
-		);
-	}
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error: error.message || "AI分析処理中にエラーが発生しました",
+        details: error.stack || "スタック情報なし",
+      }),
+      {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 500,
+      },
+    );
+  }
 });
