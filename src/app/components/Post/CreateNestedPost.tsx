@@ -504,7 +504,7 @@ const CreateNestedPost = ({
               type="file"
               accept="image/*"
               {...register("image")}
-              className="border-2 border-gray-200 dark:border-gray-600 focus:border-rose-500 dark:focus:border-rose-400 focus:ring-2 focus:ring-rose-200 dark:focus:ring-rose-800 transition-all duration-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              className="border-2 border-gray-200 dark:border-gray-600 focus:border-rose-500 dark:focus:border-rose-400 focus:ring-2 focus:ring-rose-200 dark:focus:ring-rose-800 transition-all duration-300 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 file:text-gray-900 dark:file:text-gray-100"
             />
           </div>
           {errors.image && (
