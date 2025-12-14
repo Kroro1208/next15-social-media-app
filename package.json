@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint . --max-warnings 0",
     "preview": "next start",
     "test": "jest --passWithNoTests",
     "format": "prettier --write .",
@@ -48,7 +48,8 @@
     "zod": "^3.25.64"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
+    "@eslint/eslintrc": "^3.3.3",
+    "@eslint/js": "^9.39.2",
     "@playwright/mcp": "github:microsoft/playwright-mcp",
     "@types/connect": "^3.4.38",
     "@types/jest": "^30.0.0",
