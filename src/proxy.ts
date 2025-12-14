@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { routeProtection } from "@/config/RouteProtection";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   try {
@@ -47,7 +47,7 @@ export async function middleware(request: NextRequest) {
 
     return NextResponse.next();
   } catch (error) {
-    console.error("ミドルウェアセキュリティエラー:", error);
+    console.error("プロキシセキュリティエラー:", error);
 
     // セキュリティ違反 - ログインにリダイレクトしてクッキーをクリア
     const response = NextResponse.redirect(new URL("/auth/login", request.url));
